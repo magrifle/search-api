@@ -1,0 +1,15 @@
+com\mightwork\searchapi\SearchKeyConfigurerService.class
+com\mightwork\searchapi\data\SearchKey.class
+com\mightwork\searchapi\specification\EntitySpecification.class
+com\mightwork\searchapi\specification\EntitySpecification$1.class
+com\mightwork\searchapi\SearchConfigurer.class
+com\mightwork\searchapi\annotation\SearchApi.class
+com\mightwork\searchapi\specification\EntitySpecification$CompositionType$1.class
+com\mightwork\searchapi\data\SearchCriteria.class
+com\mightwork\searchapi\exception\SearchKeyValidationException.class
+com\mightwork\searchapi\specification\EntitySpecification$ComposedSpecification.class
+com\mightwork\searchapi\aspect\SearchApiAspect.class
+com\mightwork\searchapi\SearchOperation.class
+com\mightwork\searchapi\specification\EntitySpecification$CompositionType.class
+com\mightwork\searchapi\specification\SpecificationsBuilder.class
+com\mightwork\searchapi\exception\SearchDataFormatException.class
