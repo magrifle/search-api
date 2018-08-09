@@ -1,4 +1,6 @@
-./Idea
+.Idea
 /target
-*.impl
+*.iml
 /lib
+search-api.iml
+src/main/main.iml

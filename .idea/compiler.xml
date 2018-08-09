@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="searchapi" />
+        <module name="search-api" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="search-api" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
