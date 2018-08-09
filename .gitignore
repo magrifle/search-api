@@ -1,6 +1,16 @@
-.Idea
-/target
-*.iml
-/lib
+# Created by .ignore support plugin (hsz.mobi)
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+.idea/
+lib/
 search-api.iml
-src/main/main.iml
