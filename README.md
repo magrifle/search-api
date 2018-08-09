@@ -3,19 +3,19 @@ A library that helps you instantly turn your spring powered endpoints into a que
 
 It makes use of `AOP` to intercept the calls to your controller and build a `Specification` from the provided query parameters
 
-#example
-```
-@SearchApi(type = Item, failOnMissingQueryString = true)
+# Example
+````
+@SearchApi(type = Item)
 @GetMapping("/search")
 public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
     return repository.findAll(entitySpecification, pageable);
 }
-```
-#configuration
-
-1) Add the dependency to the pom.xml file of your Spring boot or web MVC project. (Assume of course you're using maven package manager)
-
 ````
+# Configuration
+
+1.  Add the dependency to the pom.xml file of your Spring boot or web MVC project. (Assume of course you're using maven package manager)
+
+````xml
 <dependency>
  <groupId>might-work</groupId>
     <artifactId>search-api</artifactId>
@@ -23,46 +23,39 @@ public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pag
 </dependency>
 ````
 
-2) Next, you need to define a `Bean` to enable the search API functionality
+2.  Next, you need to define a `Bean` to enable the search API functionality
 
-````
+````java
 @Configuration
-class ApiSearchConfig {
+public class ApiSearchConfig {
     
     @Bean
     public SearchApiAspect searchApiAspect() {
         return new SearchApiAspect();
     }
-
-
-@Bean("invoiceItemSearchKeys")
-    fun getInvoiceItemSearchKeys() = object : SearchConfigurer<Item>() {
-        override fun getSearchKeys(): MutableList<SearchKey> {
-            val searchKeys = ArrayList<SearchKey>()
-            searchKeys.add(SearchKey("dateClose", "closeDate", true))
-            val searchKey = SearchKey("companyId", "idCompany")
-            searchKey.isRequired = true
-            searchKeys.add(searchKey)
-            return searchKeys
-        }
-    }
-
-    @Bean("invoiceItemHistorySearchKeys")
-    fun getInvoiceItemHistorySearchKeys() = object : SearchConfigurer<ItemHistory>() {
-        override fun getSearchKeys(): MutableList<SearchKey> {
-            val searchKeys = ArrayList<SearchKey>()
-            searchKeys.add(SearchKey("dateClose", "closeDate", true))
-            searchKeys.add(SearchKey("companyId", "idCompany"))
-            return searchKeys
-        }
-    }
+}
 
 ````
+3) Next, we add a `Bean` of type `SearchConfigurer` that holds the configuration of your data mapping. 
+This bean has a method `getSearchKeys()` that contains a list of all the `SearchKey` that are allowed in your search API.
+
+It also contains some the configuration methods like `getDateKeyFormat()` that can be used to specify the allowed date format in the query string of the search API. 
+
+```java
+@Configuration
+public class ApiSearchConfig {
+
+...
+@Bean
+public SearchConfigurer getSearchKeysForItem() {
+return SearchConfigurer(){
+   getSearchKeys() {
+    List<SearchKey> searchKeys = new ArrayList<>();
+    searchKeys.add(new SearchKey("firstName", "firstNameInEntity"));
+    searchKeys.add(new SearchKey("dateCreated","createdDateInEntity", true);
+    return searchKeys;
+   }
+}
 
 ```
-@SearchApi(type = Item::class, failOnMissingQueryString = true)
-    @GetMapping("/bookings2")
-    fun getInvoiceItems2(specification: EntitySpecification<Item>, pageable: Pageable): Page<Item>? =
-        invoiceItemService.findAll(specification, pageable)
 
-```
