@@ -1,14 +1,21 @@
 # search-api
 A library that helps you instantly turn your spring powered endpoints into a query engine.
 
-It makes use of `AOP` to intercept the calls to your controller and build a `Specification` from the provided query parameters
+It makes use of `AOP` to intercept the calls to your `Controller` or `RestController` and build a `Specification` from the provided query parameters
 
 # Example
-````
-@SearchApi(type = Item)
-@GetMapping("/search")
-public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
-    return repository.findAll(entitySpecification, pageable);
+````java
+
+@RestController
+public class ApiController {
+
+    ...
+
+    @SearchApi(type = Item)
+    @GetMapping("/search")
+    public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
+        return repository.findAll(entitySpecification, pageable);
+    }
 }
 ````
 # Configuration
@@ -45,16 +52,17 @@ It also contains some the configuration methods like `getDateKeyFormat()` that c
 @Configuration
 public class ApiSearchConfig {
 
-...
-@Bean
-public SearchConfigurer getSearchKeysForItem() {
-return SearchConfigurer(){
-   getSearchKeys() {
-    List<SearchKey> searchKeys = new ArrayList<>();
-    searchKeys.add(new SearchKey("firstName", "firstNameInEntity"));
-    searchKeys.add(new SearchKey("dateCreated","createdDateInEntity", true);
-    return searchKeys;
-   }
+    ...
+
+    @Bean
+    public SearchConfigurer getSearchKeysForItem() {
+    return SearchConfigurer(){
+       getSearchKeys() {
+        List<SearchKey> searchKeys = new ArrayList<>();
+        searchKeys.add(new SearchKey("firstName", "firstNameInEntity"));
+        searchKeys.add(new SearchKey("dateCreated","createdDateInEntity", true);
+        return searchKeys;
+       }
 }
 
 ```
