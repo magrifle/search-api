@@ -10,12 +10,12 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.Assert;
 
-public class EntitySpecification<T> implements Specification<T>
+public class EntitySpecification<T> implements Specification<T>, CriteriaSpecification<T>
 {
 
     private SearchCriteria criteria;
 
-    private Specification<T> spec;
+    private CriteriaSpecification<T> spec;
 
 
     public EntitySpecification()
@@ -29,7 +29,7 @@ public class EntitySpecification<T> implements Specification<T>
     }
 
 
-    EntitySpecification(Specification<T> spec)
+    private EntitySpecification(CriteriaSpecification<T> spec)
     {
         this.spec = spec;
     }
@@ -84,27 +84,34 @@ public class EntitySpecification<T> implements Specification<T>
     }
 
 
-    static <T> EntitySpecification<T> where(Specification<T> spec)
+    static <T> EntitySpecification<T> where(CriteriaSpecification<T> spec)
     {
         return new EntitySpecification<>(spec);
     }
 
 
-    Specification<T> and(Specification<T> other)
+    EntitySpecification<T> and(CriteriaSpecification<T> other)
     {
         return new EntitySpecification(new EntitySpecification.ComposedSpecification(this.spec, other, EntitySpecification.CompositionType.AND));
     }
 
 
-    private static class ComposedSpecification<T> implements Specification<T>, Serializable
+    @Override
+    public SearchCriteria getCriteria()
+    {
+        return this.spec.getCriteria();
+    }
+
+
+    private static class ComposedSpecification<T> implements CriteriaSpecification<T>, Serializable
     {
         private static final long serialVersionUID = 1L;
-        private final Specification<T> lhs;
-        private final Specification<T> rhs;
+        private final CriteriaSpecification<T> lhs;
+        private final CriteriaSpecification<T> rhs;
         private final EntitySpecification.CompositionType compositionType;
 
 
-        private ComposedSpecification(Specification<T> lhs, Specification<T> rhs, EntitySpecification.CompositionType compositionType)
+        private ComposedSpecification(CriteriaSpecification<T> lhs, CriteriaSpecification<T> rhs, EntitySpecification.CompositionType compositionType)
         {
             Assert.notNull(compositionType, "CompositionType must not be null!");
             this.lhs = lhs;
@@ -113,7 +120,15 @@ public class EntitySpecification<T> implements Specification<T>
         }
 
 
-        public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder)
+        @Override
+        public SearchCriteria getCriteria()
+        {
+            return this.rhs.getCriteria();
+        }
+
+
+        @Override
+        public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder builder)
         {
             Predicate otherPredicate = this.rhs == null ? null : this.rhs.toPredicate(root, query, builder);
             Predicate thisPredicate = this.lhs == null ? null : this.lhs.toPredicate(root, query, builder);

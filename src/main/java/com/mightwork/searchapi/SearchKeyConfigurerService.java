@@ -6,6 +6,7 @@ import com.mightwork.searchapi.exception.SearchDataFormatException;
 import com.mightwork.searchapi.exception.SearchKeyValidationException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public final class SearchKeyConfigurerService<T>
                     "Unknown search key \"" + criterion.getKey() + "\" was found!"));
 
             this.validateKey(searchKey, criterion);
-            if (searchKey.isDateField())
+            if (this.isDateField(searchKey.getFieldName()))
             {
                 try
                 {
@@ -63,12 +64,12 @@ public final class SearchKeyConfigurerService<T>
     public void prepareSearchData(List<SearchCriteria> criteriaList) throws SearchKeyValidationException, SearchDataFormatException
     {
         //validate if there is a missing required field
-        List<String> searchKeys = criteriaList.stream().map(c -> c.getKey()).collect(Collectors.toList());
+        List<String> searchKeys = criteriaList.stream().map(c -> c.getKey().toLowerCase()).collect(Collectors.toList());
 
         this.searchConfigurer.getSearchKeys()
             .stream()
             .filter(s -> s.isRequired())
-            .map(s -> s.getName())
+            .map(s -> s.getName().toLowerCase())
             .collect(Collectors.toList())
             .stream().filter(c -> !searchKeys.contains(c)).forEach(c -> {
             throw new SearchKeyValidationException(
@@ -81,4 +82,14 @@ public final class SearchKeyConfigurerService<T>
         }
     }
 
+
+    private boolean isDateField(String fieldName)
+    {
+
+        return Arrays.asList(this.searchConfigurer.getType().getDeclaredFields())
+            .stream()
+            .peek(f -> f.setAccessible(true))
+            .filter(f -> f.getName().equalsIgnoreCase(fieldName))
+            .anyMatch(f -> f.getType().isAssignableFrom(Date.class));
+    }
 }

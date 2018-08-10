@@ -61,13 +61,13 @@ public class SpecificationsBuilder<T>
             return null;
         }
         this.searchKeyConfigurerService.prepareSearchData(params);
-        List<Specification<T>> specs = new ArrayList<>();
+        List<CriteriaSpecification<T>> specs = new ArrayList<>();
         for (SearchCriteria param : params)
         {
             specs.add(new EntitySpecification(param));
         }
 
-        Specification<T> result = specs.get(0);
+        CriteriaSpecification<T> result = specs.get(0);
         for (int i = 1; i < specs.size(); i++)
         {
             result = EntitySpecification.where(result).and(specs.get(i));
