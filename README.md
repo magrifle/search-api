@@ -69,16 +69,19 @@ public class ApiSearchConfig {
 @RestController
 public class ApiController {
 
+    @Autowired
+    private ItemRepository itemRepository;
     ...
 
     @SearchApi(type = Item)
     @GetMapping("/search")
     public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
-        return repository.findAll(entitySpecification, pageable);
+        return itemRepository.findAll(entitySpecification, pageable);
     }
 }
 ````
-*Note that your repository class my extend the `JpaSpecification` interface in `spring-data` to have access to the `findAll(Specification)` method.*
+**Note that your repository class must extend the `JpaSpecification` interface in `spring-data` to have access to the `findAll(Specification)` method.**
+
 
 # Parameters
 `@SearchApi`
