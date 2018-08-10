@@ -6,7 +6,7 @@ Inspired by [github search API](https://developer.github.com/v3/search/)
 
 # Example
 ````curl
-curl http://your.awesome.api/search/repositories?q=firstName:Jones,lastName:Fran*,dateCreated>2018-01-01,age<67,city:*ondon*
+curl http://your.awesome.api/search?q=firstName:Jones,lastName:Fran*,dateCreated>2018-01-01,age<67,city:*ondon*
 ````
 
 # Configuration
@@ -78,6 +78,7 @@ public class ApiController {
     }
 }
 ````
+*Note that your repository class my extend the `JpaSpecification` interface in `spring-data` to have access to the `findAll(Specification)` method.*
 
 # Parameters
 `@SearchApi`
@@ -86,4 +87,5 @@ public class ApiController {
 |---|---|---|
 |`queryString`|`String`| `default` `"q"`. This is the query string parameter in the request that contains the search criteria. |
 |`keySeparator`|`char`| `default` `","`. The character used to separate different criteria in the `queryString` |
+|`type`|`class`| `required`. The entity class to be queried.|
 |`failOnMissingQueryString`|`boolean`| `default` `"false"`. By default, if the `queryString` is empty, the endpoint would query the repository with an empty criteria which translates to `select * ...` in `sql`. You can turn off this behaviour by setting this parameter to `true` in which case a `SearchKeyValidationException` exception is thrown if the `queryString` is missing or does not contain any criteria. |
