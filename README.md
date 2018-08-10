@@ -1,23 +1,14 @@
 # search-api
-A library that helps you instantly turn your spring powered endpoints into a query engine.
+A library that helps you instantly turn your Spring powered endpoints into a query engine.
+It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestController` endpoint and then builds a `Specification` from the provided query parameters
 
-It makes use of `AOP` to intercept the calls to your `Controller` or `RestController` and build a `Specification` from the provided query parameters
+Inspired by [github search API](https://developer.github.com/v3/search/)
 
 # Example
-````java
-
-@RestController
-public class ApiController {
-
-    ...
-
-    @SearchApi(type = Item)
-    @GetMapping("/search")
-    public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
-        return repository.findAll(entitySpecification, pageable);
-    }
-}
+````curl
+curl http://your.awesome.api/search/repositories?q=firstName:Jones,lastName:Fran*,dateCreated>2018-01-01,age<67,city:*ondon*
 ````
+
 # Configuration
 
 1.  Add the dependency to the pom.xml file of your Spring boot or web MVC project. (Assume of course you're using maven package manager)
@@ -30,7 +21,7 @@ public class ApiController {
 </dependency>
 ````
 
-2.  Next, you need to define a `Bean` to enable the search API functionality
+2.  Next, you need to define a `@Bean` to enable the search API functionality
 
 ````java
 @Configuration
@@ -43,7 +34,7 @@ public class ApiSearchConfig {
 }
 
 ````
-3) Next, we add a `Bean` of type `SearchConfigurer` that holds the configuration of your data mapping. 
+3) Next, we add a `@Bean` of type `SearchConfigurer` that holds the configuration of your data mapping.
 This bean has a method `getSearchKeys()` that contains a list of all the `SearchKey` that are allowed in your search API.
 
 It also contains some the configuration methods like `getDateKeyFormat()` that can be used to specify the allowed date format in the query string of the search API. 
@@ -59,11 +50,40 @@ public class ApiSearchConfig {
     return SearchConfigurer(){
        getSearchKeys() {
         List<SearchKey> searchKeys = new ArrayList<>();
-        searchKeys.add(new SearchKey("firstName", "firstNameInEntity"));
-        searchKeys.add(new SearchKey("dateCreated","createdDateInEntity", true);
+        searchKeys.add(new SearchKey("firstName", "firstNameFieldInEntity"));
+        searchKeys.add(new SearchKey("lastName","lastNameFieldInEntity"));
+        searchKeys.add(new SearchKey("age","ageFieldInEntity"));
+        searchKeys.add(new SearchKey("city","cityFieldInEntity"));
+        searchKeys.add(new SearchKey("dateCreated","dateCreatedInEntity", true));
         return searchKeys;
        }
+    }
 }
 
 ```
 
+4)  Finally, in your `@Controller` or `@RestController`, add the `@SearchApi` annotation
+
+````java
+
+@RestController
+public class ApiController {
+
+    ...
+
+    @SearchApi(type = Item)
+    @GetMapping("/search")
+    public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
+        return repository.findAll(entitySpecification, pageable);
+    }
+}
+````
+
+# Parameters
+`@SearchApi`
+
+| Name | Type | Description |
+|---|---|---|
+|`queryString`|`String`| `default` `"q"`. This is the query string parameter in the request that contains the search criteria. |
+|`keySeparator`|`char`| `default` `","`. The character used to separate different criteria in the `queryString` |
+|`failOnMissingQueryString`|`boolean`| `default` `"false"`. By default, if the `queryString` is empty, the endpoint would query the repository with an empty criteria which translates to `select * ...` in `sql`. You can turn off this behaviour by setting this parameter to `true` in which case a `SearchKeyValidationException` exception is thrown if the `queryString` is missing or does not contain any criteria. |
