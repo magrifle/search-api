@@ -1,16 +1,14 @@
 package com.mightwork.searchapi.specification;
 
 import com.mightwork.searchapi.data.SearchCriteria;
+import org.springframework.util.Assert;
 
-import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.Assert;
+import java.io.Serializable;
+import java.util.Date;
 
 public class EntitySpecification<T> implements CriteriaSpecification<T> {
 
@@ -32,6 +30,9 @@ public class EntitySpecification<T> implements CriteriaSpecification<T> {
         this.spec = spec;
     }
 
+    static <T> EntitySpecification<T> where(CriteriaSpecification<T> spec) {
+        return new EntitySpecification<>(spec);
+    }
 
     @Override
     public Predicate toPredicate(
@@ -72,14 +73,8 @@ public class EntitySpecification<T> implements CriteriaSpecification<T> {
         }
     }
 
-
-    static <T> EntitySpecification<T> where(CriteriaSpecification<T> spec) {
-        return new EntitySpecification<>(spec);
-    }
-
-
     EntitySpecification<T> and(CriteriaSpecification<T> other) {
-        return new EntitySpecification(new EntitySpecification.ComposedSpecification(this.spec, other, EntitySpecification.CompositionType.AND));
+        return new EntitySpecification<>(new EntitySpecification.ComposedSpecification<>(this.spec, other, EntitySpecification.CompositionType.AND));
     }
 
 
@@ -91,6 +86,21 @@ public class EntitySpecification<T> implements CriteriaSpecification<T> {
         return this.criteria;
     }
 
+
+    enum CompositionType {
+        AND {
+            public Predicate combine(CriteriaBuilder builder, Predicate lhs, Predicate rhs) {
+                return builder.and(lhs, rhs);
+            }
+        };
+
+
+        CompositionType() {
+        }
+
+
+        abstract Predicate combine(CriteriaBuilder var1, Predicate var2, Predicate var3);
+    }
 
     private static class ComposedSpecification<T> implements CriteriaSpecification<T>, Serializable {
         private static final long serialVersionUID = 1L;
@@ -114,25 +124,10 @@ public class EntitySpecification<T> implements CriteriaSpecification<T> {
 
 
         @Override
-        public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder builder) {
+        public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
             Predicate otherPredicate = this.rhs == null ? null : this.rhs.toPredicate(root, query, builder);
             Predicate thisPredicate = this.lhs == null ? null : this.lhs.toPredicate(root, query, builder);
             return thisPredicate == null ? otherPredicate : (otherPredicate == null ? thisPredicate : this.compositionType.combine(builder, thisPredicate, otherPredicate));
         }
-    }
-
-    enum CompositionType {
-        AND {
-            public Predicate combine(CriteriaBuilder builder, Predicate lhs, Predicate rhs) {
-                return builder.and(lhs, rhs);
-            }
-        };
-
-
-        CompositionType() {
-        }
-
-
-        abstract Predicate combine(CriteriaBuilder var1, Predicate var2, Predicate var3);
     }
 }

@@ -2,53 +2,45 @@ package com.mightwork.searchapi.data;
 
 import com.mightwork.searchapi.SearchOperation;
 
-public class SearchCriteria
-{
+public class SearchCriteria {
     private String key;
     private SearchOperation operation;
     private Object value;
 
 
-    public SearchCriteria(String key, SearchOperation operation, Object value)
-    {
+    public SearchCriteria(String key, SearchOperation operation, Object value) {
         this.key = key;
         this.operation = operation;
         this.value = value;
     }
 
 
-    public String getKey()
-    {
+    public String getKey() {
         return key;
     }
 
 
-    public void setKey(String key)
-    {
+    public void setKey(String key) {
         this.key = key;
     }
 
 
-    public SearchOperation getOperation()
-    {
+    public SearchOperation getOperation() {
         return operation;
     }
 
 
-    public void setOperation(SearchOperation operation)
-    {
+    public void setOperation(SearchOperation operation) {
         this.operation = operation;
     }
 
 
-    public Object getValue()
-    {
+    public Object getValue() {
         return value;
     }
 
 
-    public void setValue(Object value)
-    {
+    public void setValue(Object value) {
         this.value = value;
     }
 }

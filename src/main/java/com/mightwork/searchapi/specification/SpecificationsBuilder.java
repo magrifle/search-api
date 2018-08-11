@@ -3,47 +3,36 @@ package com.mightwork.searchapi.specification;
 import com.mightwork.searchapi.SearchKeyConfigurerService;
 import com.mightwork.searchapi.SearchOperation;
 import com.mightwork.searchapi.data.SearchCriteria;
+import org.springframework.data.jpa.domain.Specification;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
-public class SpecificationsBuilder<T>
-{
-
-    private List<SearchCriteria> params = new ArrayList<>();
+public class SpecificationsBuilder<T> {
 
     private final SearchKeyConfigurerService<T> searchKeyConfigurerService;
+    private List<SearchCriteria> params = new ArrayList<>();
 
 
-    public SpecificationsBuilder(SearchKeyConfigurerService searchKeyConfigurerService)
-    {
+    public SpecificationsBuilder(SearchKeyConfigurerService<T> searchKeyConfigurerService) {
         this.searchKeyConfigurerService = searchKeyConfigurerService;
     }
 
 
     public SpecificationsBuilder with(
-        String key, String operation, Object value, String prefix, String suffix)
-    {
+            String key, String operation, Object value, String prefix, String suffix) {
 
         SearchOperation op = SearchOperation.SIMPLE_OPERATION_SET.get(operation.charAt(0));
-        if (op != null)
-        {
-            if (op == SearchOperation.EQUALITY)
-            {
+        if (op != null) {
+            if (op == SearchOperation.EQUALITY) {
                 boolean startWithAsterisk = prefix.equals("*");
                 boolean endWithAsterisk = suffix.equals("*");
 
-                if (startWithAsterisk && endWithAsterisk)
-                {
+                if (startWithAsterisk && endWithAsterisk) {
                     op = SearchOperation.CONTAINS;
-                }
-                else if (startWithAsterisk)
-                {
+                } else if (startWithAsterisk) {
                     op = SearchOperation.ENDS_WITH;
-                }
-                else if (endWithAsterisk)
-                {
+                } else if (endWithAsterisk) {
                     op = SearchOperation.STARTS_WITH;
                 }
             }
@@ -55,22 +44,18 @@ public class SpecificationsBuilder<T>
     }
 
 
-    public Specification<T> build()
-    {
-        if (params.size() == 0)
-        {
+    public Specification<T> build() {
+        if (params.size() == 0) {
             return null;
         }
         this.searchKeyConfigurerService.prepareSearchData(params);
         List<CriteriaSpecification<T>> specs = new ArrayList<>();
-        for (SearchCriteria param : params)
-        {
-            specs.add(new EntitySpecification(param));
+        for (SearchCriteria param : params) {
+            specs.add(new EntitySpecification<>(param));
         }
 
         CriteriaSpecification<T> result = specs.get(0);
-        for (int i = 1; i < specs.size(); i++)
-        {
+        for (int i = 1; i < specs.size(); i++) {
             result = EntitySpecification.where(result).and(specs.get(i));
         }
         return result;
