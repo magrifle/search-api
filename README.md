@@ -46,17 +46,13 @@ public class ApiSearchConfig {
     ...
 
     @Bean
-    public SearchConfigurer getSearchKeysForItem() {
-        return new SearchConfigurer() {
-
+    public SearchConfigurer<Item> getSearchKeysForItem() {
+        return new SearchConfigurer<Item>() {
             @Override
             public List<SearchKey> getSearchKeys() {
                 List<SearchKey> searchKeys = new ArrayList();
-                searchKeys.add(new SearchKey("firstName", "firstNameFieldInEntity"));
-                searchKeys.add(new SearchKey("lastName", "lastNameFieldInEntity"));
-                searchKeys.add(new SearchKey("age", "ageFieldInEntity"));
-                searchKeys.add(new SearchKey("city", "cityFieldInEntity"));
-                searchKeys.add(new SearchKey("dateCreated", "dateCreatedInEntity"));
+                searchKeys.add(new SearchKey("name", "name"));
+                searchKeys.add(new SearchKey("pno", "passportNumber"));
                 return searchKeys;
             }
         };
