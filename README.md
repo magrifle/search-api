@@ -47,16 +47,19 @@ public class ApiSearchConfig {
 
     @Bean
     public SearchConfigurer getSearchKeysForItem() {
-    return SearchConfigurer(){
-       getSearchKeys() {
-        List<SearchKey> searchKeys = new ArrayList<>();
-        searchKeys.add(new SearchKey("firstName", "firstNameFieldInEntity"));
-        searchKeys.add(new SearchKey("lastName","lastNameFieldInEntity"));
-        searchKeys.add(new SearchKey("age","ageFieldInEntity"));
-        searchKeys.add(new SearchKey("city","cityFieldInEntity"));
-        searchKeys.add(new SearchKey("dateCreated","dateCreatedInEntity", true));
-        return searchKeys;
-       }
+        return new SearchConfigurer() {
+
+            @Override
+            public List<SearchKey> getSearchKeys() {
+                List<SearchKey> searchKeys = new ArrayList();
+                searchKeys.add(new SearchKey("firstName", "firstNameFieldInEntity"));
+                searchKeys.add(new SearchKey("lastName", "lastNameFieldInEntity"));
+                searchKeys.add(new SearchKey("age", "ageFieldInEntity"));
+                searchKeys.add(new SearchKey("city", "cityFieldInEntity"));
+                searchKeys.add(new SearchKey("dateCreated", "dateCreatedInEntity"));
+                return searchKeys;
+            }
+        };
     }
 }
 
@@ -73,14 +76,14 @@ public class ApiController {
     private ItemRepository itemRepository;
     ...
 
-    @SearchApi(type = Item)
+    @SearchApi(entity = Item)
     @GetMapping("/search")
     public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
         return itemRepository.findAll(entitySpecification, pageable);
     }
 }
 ````
-**Note that your repository class must extend the `JpaSpecification` interface in `spring-data` to have access to the `findAll(Specification)` method.**
+**Note that your repository class must extend the `JpaSpecificationExecutor<T>` interface in `spring-data` to have access to the `findAll(Specification)` method.**
 
 
 # Parameters
@@ -90,5 +93,5 @@ public class ApiController {
 |---|---|---|
 |`queryString`|`String`| `default` `"q"`. This is the query string parameter in the request that contains the search criteria. |
 |`keySeparator`|`char`| `default` `","`. The character used to separate different criteria in the `queryString` |
-|`type`|`class`| `required`. The entity class to be queried.|
+|`entity`|`class`| `required`. The entity class to be queried.|
 |`failOnMissingQueryString`|`boolean`| `default` `"false"`. By default, if the `queryString` is empty, the endpoint would query the repository with an empty criteria which translates to `select * ...` in `sql`. You can turn off this behaviour by setting this parameter to `true` in which case a `SearchKeyValidationException` exception is thrown if the `queryString` is missing or does not contain any criteria. |
