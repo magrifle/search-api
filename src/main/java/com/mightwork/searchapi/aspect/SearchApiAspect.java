@@ -65,7 +65,7 @@ public class SearchApiAspect {
         }
         String join = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET.keySet());
         Pattern pattern = Pattern.compile("(\\w+?)(" + join + ")(\\*?)([\\w-]+?)(\\*?),");
-        Matcher matcher = pattern.matcher(queryParameter + searchApi.keySeparator());
+        Matcher matcher = pattern.matcher(queryParameter + searchApi.keySeparator().getValue());
         Object[] args = joinPoint.getArgs();
 
         SearchConfigurer first = searchConfigurers.stream()

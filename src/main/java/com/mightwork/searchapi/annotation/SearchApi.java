@@ -1,5 +1,7 @@
 package com.mightwork.searchapi.annotation;
 
+import com.mightwork.searchapi.specification.SearchParameterSeparator;
+
 import java.lang.annotation.*;
 
 @Target({ElementType.METHOD})
@@ -9,7 +11,7 @@ public @interface SearchApi {
 
     String queryString() default "q";
 
-    char keySeparator() default ',';
+    SearchParameterSeparator keySeparator() default SearchParameterSeparator.COMMA;
 
     Class entity();
 
