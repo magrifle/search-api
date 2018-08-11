@@ -38,7 +38,7 @@ public final class SearchKeyConfigurerService<T>
             SearchKey searchKey = this.searchConfigurer.getSearchKeys()
                 .stream()
                 .filter(n -> n.getName().equalsIgnoreCase(criterion.getKey()))
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new SearchKeyValidationException(
                     "Unknown search key \"" + criterion.getKey() + "\" was found!"));
 

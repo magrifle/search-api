@@ -6,6 +6,7 @@ import com.mightwork.searchapi.data.SearchCriteria;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 public class SpecificationsBuilder<T>
 {
@@ -30,8 +31,8 @@ public class SpecificationsBuilder<T>
         {
             if (op == SearchOperation.EQUALITY)
             {
-                boolean startWithAsterisk = prefix == "*";
-                boolean endWithAsterisk = suffix == "*";
+                boolean startWithAsterisk = prefix.equals("*");
+                boolean endWithAsterisk = suffix.equals("*");
 
                 if (startWithAsterisk && endWithAsterisk)
                 {
