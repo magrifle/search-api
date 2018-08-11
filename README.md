@@ -2,7 +2,7 @@
 A library that helps you instantly turn your Spring powered endpoints into a query engine.
 It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestController` endpoint and then builds a `Specification` from the provided query parameters
 
-Inspired by [github search API](https://developer.github.com/v3/search/)
+**Inspired by** [GitHub Search API](https://developer.github.com/v3/search/)
 
 # Example
 ````curl
@@ -51,7 +51,7 @@ public class ApiSearchConfig {
             @Override
             public List<SearchKey> getSearchKeys() {
                 List<SearchKey> searchKeys = new ArrayList();
-                searchKeys.add(new SearchKey("name", "name"));
+                searchKeys.add(new SearchKey("name"));
                 searchKeys.add(new SearchKey("pno", "passportNumber"));
                 return searchKeys;
             }
@@ -83,7 +83,7 @@ public class ApiController {
 
 
 # Parameters
-`@SearchApi`
+### `@SearchApi`
 
 | Name | Type | Description |
 |---|---|---|
