@@ -12,15 +12,13 @@ import org.springframework.core.annotation.AliasFor;
 @Documented
 public @interface SearchApi
 {
-    @AliasFor("value")
-    String queryString() default "q";
 
-    @AliasFor("queryString")
-    String value() default "q";
+    String queryString() default "q";
 
     char keySeparator() default ',';
 
-    Class type();
+    @AliasFor("value")
+    Class entity();
 
     boolean failOnMissingQueryString() default false;
 

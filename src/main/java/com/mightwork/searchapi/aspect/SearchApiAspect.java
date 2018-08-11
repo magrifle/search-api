@@ -72,7 +72,7 @@ public class SearchApiAspect
         Object[] args = joinPoint.getArgs();
 
         SearchConfigurer first = searchConfigurers.stream()
-            .filter(b -> b.getType() == searchApi.type()).findFirst().get();
+            .filter(b -> b.getType() == searchApi.entity()).findFirst().get();
 
         //rework to use a single instance of all classes except the configurer
         SpecificationsBuilder builder = new SpecificationsBuilder(new SearchKeyConfigurerService(first));
@@ -114,13 +114,13 @@ public class SearchApiAspect
             SearchApi methodAnnotation = handlerMethod.getMethodAnnotation(SearchApi.class);
             if (methodAnnotation != null)
             {
-                Class type = methodAnnotation.type();
+                Class type = methodAnnotation.entity();
                 searchConfigurers.stream()
                     .filter(b -> b.getType() == type)
                     .findAny()
-                    .orElseThrow(() -> new IllegalArgumentException("You have defined @" + SearchApi.class.getName() + "(type=\"" + type + "\".class on method [" + handlerMethod
+                    .orElseThrow(() -> new IllegalArgumentException("You have defined @" + SearchApi.class.getName() + "(entity=\"" + type + "\".class on method [" + handlerMethod
                         .getMethod()
-                        .getName() + "] but you have not created a bean of type " + SearchConfigurer.class.getName() + "<\"" + type + "\">"));
+                        .getName() + "] but you have not created a bean of entity " + SearchConfigurer.class.getName() + "<\"" + type + "\">"));
             }
         }
     }
