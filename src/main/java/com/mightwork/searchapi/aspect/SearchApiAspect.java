@@ -5,16 +5,10 @@ import com.mightwork.searchapi.SearchConfigurer;
 import com.mightwork.searchapi.SearchKeyConfigurerService;
 import com.mightwork.searchapi.SearchOperation;
 import com.mightwork.searchapi.annotation.SearchApi;
+import com.mightwork.searchapi.exception.SearchApiConfigurationException;
 import com.mightwork.searchapi.exception.SearchKeyValidationException;
 import com.mightwork.searchapi.specification.EntitySpecification;
 import com.mightwork.searchapi.specification.SpecificationsBuilder;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -29,9 +23,16 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+
 @Aspect
-public class SearchApiAspect
-{
+public class SearchApiAspect {
     private static final Logger logger = LoggerFactory.getLogger(SearchApiAspect.class);
 
     @Autowired
@@ -45,25 +46,21 @@ public class SearchApiAspect
 
 
     @Pointcut("@annotation(searchApi)")
-    public void methodsWithSearchApi(SearchApi searchApi)
-    {
+    public void methodsWithSearchApi(SearchApi searchApi) {
     }
 
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *) ||" +
-        "within(@org.springframework.stereotype.Controller *)")
-    public void allPublicControllerMethodsPointcut()
-    {
+            "within(@org.springframework.stereotype.Controller *)")
+    public void allPublicControllerMethodsPointcut() {
     }
 
 
     @Around("allPublicControllerMethodsPointcut() && methodsWithSearchApi(searchApi)")
-    public Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable
-    {
+    public Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String queryParameter = request.getParameter(searchApi.queryString());
-        if ((queryParameter == null || queryParameter.isEmpty()) && searchApi.failOnMissingQueryString())
-        {
+        if ((queryParameter == null || queryParameter.isEmpty()) && searchApi.failOnMissingQueryString()) {
             throw new SearchKeyValidationException("The required query parameter \"" + searchApi.queryString() + "\" is missing");
         }
         String join = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET.keySet());
@@ -72,18 +69,19 @@ public class SearchApiAspect
         Object[] args = joinPoint.getArgs();
 
         SearchConfigurer first = searchConfigurers.stream()
-            .filter(b -> b.getType() == searchApi.entity()).findFirst().get();
+                .filter(b -> b.getType() == searchApi.entity())
+                .findFirst()
+                .orElseThrow(()-> new SearchApiConfigurationException("Could not find a configuration bean of "+SearchConfigurer.class.getName() + "<\"" + searchApi.entity() + "\">"));
 
         //rework to use a single instance of all classes except the configurer
         SpecificationsBuilder builder = new SpecificationsBuilder(new SearchKeyConfigurerService(first));
-        while (matcher.find())
-        {
+        while (matcher.find()) {
             builder.with(
-                matcher.group(1),
-                matcher.group(2),
-                matcher.group(4),
-                matcher.group(3),
-                matcher.group(5)
+                    matcher.group(1),
+                    matcher.group(2),
+                    matcher.group(4),
+                    matcher.group(3),
+                    matcher.group(5)
             );
         }
         Specification build = builder.build();
@@ -94,33 +92,28 @@ public class SearchApiAspect
 
 
     @PostConstruct
-    public void init()
-    {
-        if (this.checkConfigurationsOnStartup)
-        {
+    public void init() {
+        if (this.checkConfigurationsOnStartup) {
             this.checkBeanConfigurations();
         }
 
     }
 
 
-    private void checkBeanConfigurations()
-    {
+    private void checkBeanConfigurations() {
         Map<RequestMappingInfo, HandlerMethod> handlerMethods =
-            this.requestMappingHandlerMapping.getHandlerMethods();
+                this.requestMappingHandlerMapping.getHandlerMethods();
 
-        for (HandlerMethod handlerMethod : handlerMethods.values())
-        {
+        for (HandlerMethod handlerMethod : handlerMethods.values()) {
             SearchApi methodAnnotation = handlerMethod.getMethodAnnotation(SearchApi.class);
-            if (methodAnnotation != null)
-            {
+            if (methodAnnotation != null) {
                 Class type = methodAnnotation.entity();
                 searchConfigurers.stream()
-                    .filter(b -> b.getType() == type)
-                    .findAny()
-                    .orElseThrow(() -> new IllegalArgumentException("You have defined @" + SearchApi.class.getName() + "(entity=\"" + type + "\".class on method [" + handlerMethod
-                        .getMethod()
-                        .getName() + "] but you have not created a bean of entity " + SearchConfigurer.class.getName() + "<\"" + type + "\">"));
+                        .filter(b -> b.getType() == type)
+                        .findAny()
+                        .orElseThrow(() -> new IllegalArgumentException("You have defined @" + SearchApi.class.getName() + "(entity=\"" + type + "\".class on method [" + handlerMethod
+                                .getMethod()
+                                .getName() + "] but you have not created a bean of entity " + SearchConfigurer.class.getName() + "<\"" + type + "\">"));
             }
         }
     }
