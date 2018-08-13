@@ -1,0 +1,25 @@
+package com.mightwork.searchapi;
+
+import com.mightwork.searchapi.test_app.AppConfig;
+import com.mightwork.searchapi.test_app.BeanConfig;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+    classes = {AppConfig.class, BeanConfig.class}
+)
+public class ApplicationContextTest
+{
+
+    @Test
+    public void load()
+    {
+
+    }
+}

@@ -72,7 +72,7 @@ public class ApiController {
     private ItemRepository itemRepository;
     ...
 
-    @SearchApi(entity = Item)
+    @SearchApi(entity = Item.class)
     @GetMapping("/search")
     public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
         return itemRepository.findAll(entitySpecification, pageable);
