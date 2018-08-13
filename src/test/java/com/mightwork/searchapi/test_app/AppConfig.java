@@ -17,7 +17,7 @@ public class AppConfig
 {
 
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
 
 
     @Bean
