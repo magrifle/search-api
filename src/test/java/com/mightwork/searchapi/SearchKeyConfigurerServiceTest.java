@@ -2,7 +2,7 @@ package com.mightwork.searchapi;
 
 import com.mightwork.searchapi.data.SearchCriteria;
 import com.mightwork.searchapi.data.SearchKey;
-import com.mightwork.searchapi.entity.TestEntity;
+import com.mightwork.searchapi.test_app.entity.*;
 import com.mightwork.searchapi.exception.SearchDataFormatException;
 import com.mightwork.searchapi.exception.SearchKeyValidationException;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
