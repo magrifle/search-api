@@ -5,10 +5,6 @@ import com.magrifle.data.searchapi.aspect.DataSearchApi;
 import com.magrifle.data.searchapi.data.SearchKey;
 import com.magrifle.data.searchapi.test_app.entity.TestEntity;
 import com.magrifle.data.searchapi.test_app.repository.TestEntityRepository;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -18,15 +14,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Configuration
 @EnableWebMvc
 @EnableJpaRepositories(basePackageClasses = TestEntityRepository.class)
 @ComponentScan(basePackages = {"com.magrifle.data.searchapi"})
-public class BeanConfig implements ApplicationRunner
-{
+public class BeanConfig implements ApplicationRunner {
     @Bean
-    public DataSearchApi searchApiAspect()
-    {
+    public DataSearchApi searchApiAspect() {
         return new DataSearchApi();
     }
 
@@ -36,13 +34,10 @@ public class BeanConfig implements ApplicationRunner
 
 
     @Bean
-    public SearchConfigurer<TestEntity> getSearchKeysForItem()
-    {
-        return new SearchConfigurer<TestEntity>()
-        {
+    public SearchConfigurer<TestEntity> getSearchKeysForItem() {
+        return new SearchConfigurer<TestEntity>() {
             @Override
-            public List<SearchKey> getSearchKeys()
-            {
+            public List<SearchKey> getSearchKeys() {
                 List<SearchKey> searchKeys = new ArrayList();
                 searchKeys.add(new SearchKey("age"));
                 searchKeys.add(new SearchKey("id"));
@@ -55,11 +50,11 @@ public class BeanConfig implements ApplicationRunner
 
 
     @Override
-    public void run(ApplicationArguments applicationArguments)
-    {
+    public void run(ApplicationArguments applicationArguments) {
         testEntityRepository.save(new TestEntity("John Smith", 12, new Date()));
         testEntityRepository.save(new TestEntity("Paul Mc", 10, new Date()));
         testEntityRepository.save(new TestEntity("Alice Kone", 12, new Date()));
         testEntityRepository.save(new TestEntity("Wales Adam", 5, new Date()));
     }
+
 }
