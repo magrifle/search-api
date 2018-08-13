@@ -17,9 +17,8 @@ curl http://your.awesome.api/search?q=firstName:Jones,lastName:Fran*,dateCreated
 
 ````xml
 <dependency>
- <groupId>might-work</groupId>
-    <artifactId>search-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>com.magrifle</groupId>
+  <artifactId>data-search-api</artifactId>
 </dependency>
 ````
 
@@ -30,8 +29,8 @@ curl http://your.awesome.api/search?q=firstName:Jones,lastName:Fran*,dateCreated
 public class ApiSearchConfig {
     
     @Bean
-    public SearchApiAspect searchApiAspect() {
-        return new SearchApiAspect();
+    public DataSearchApi dataSearchApi() {
+        return new DataSearchApi();
     }
 }
 
@@ -76,8 +75,8 @@ public class ApiController {
 
     @SearchApi(entity = Item.class)
     @GetMapping("/search")
-    public Page<Item> searchItems(EntitySpecification<Item> entitySpecification, Pageable pageable){
-        return itemRepository.findAll(entitySpecification, pageable);
+    public Page<Item> searchItems(SearchBuilder<Item> builder, Pageable pageable){
+        return itemRepository.findAll(builder.build(), pageable);
     }
 }
 ````
