@@ -55,8 +55,7 @@ public class ApplicationContextTest {
 
     @Test
     public void searchApi_whenInvalidKeyProvided_thenThrowError() throws Exception {
-       thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Name must not be null");
+        thrown.expectMessage("Unknown search key \"r\" was found!");
 
             Exception resolvedException = mvc.perform(get("/search?q=r:1"))
                     .andExpect(status().isInternalServerError())

@@ -15,3 +15,4 @@ hs_err_pid*
 target/
 search-api.iml
 searchapi.iml
+/data-search-api.iml
