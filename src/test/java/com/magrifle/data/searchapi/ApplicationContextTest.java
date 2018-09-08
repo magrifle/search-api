@@ -4,7 +4,9 @@ import com.magrifle.data.searchapi.exception.SearchKeyValidationException;
 import com.magrifle.data.searchapi.test_app.AppConfig;
 import com.magrifle.data.searchapi.test_app.BeanConfig;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,6 +30,10 @@ public class ApplicationContextTest {
 
     }
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+
     @Autowired
     private WebApplicationContext context;
 
@@ -49,13 +55,13 @@ public class ApplicationContextTest {
 
     @Test
     public void searchApi_whenInvalidKeyProvided_thenThrowError() throws Exception {
-        try {
+       thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Name must not be null");
+
             Exception resolvedException = mvc.perform(get("/search?q=r:1"))
                     .andExpect(status().isInternalServerError())
                     .andReturn().getResolvedException();
             assertTrue(resolvedException instanceof SearchKeyValidationException);
-        } catch (Exception e) {
-        }
     }
 
 }
