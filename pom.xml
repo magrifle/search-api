@@ -20,8 +20,8 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/magrifle/search-api</connection>
-        <developerConnection>scm:git:git@github.com:https://github.com/magrifle/search-api</developerConnection>
+        <connection>scm:git:git@github.com:magrifle/search-api.git</connection>
+        <developerConnection>scm:git:git@github.com:magrifle/search-api.git</developerConnection>
         <tag>data-search-api-1.0</tag>
         <url>https://github.com/magrifle/search-api</url>
     </scm>
