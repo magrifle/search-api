@@ -16,3 +16,4 @@ target/
 search-api.iml
 searchapi.iml
 /data-search-api.iml
+/release.properties
