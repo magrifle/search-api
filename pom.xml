@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.magrifle</groupId>
     <artifactId>data-search-api</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <licenses>
         <license>
@@ -22,7 +22,7 @@
     <scm>
         <connection>scm:git:git@github.com:magrifle/search-api.git</connection>
         <developerConnection>scm:git:git@github.com:magrifle/search-api.git</developerConnection>
-        <tag>data-search-api-1.0</tag>
+        <tag>data-search-api-1.0.1</tag>
         <url>https://github.com/magrifle/search-api.git</url>
     </scm>
     <distributionManagement>
