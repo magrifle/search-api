@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <name>data-search-api</name>
-    <description>A library that helps you instantly turn your Spring powered endpoints into a query engine. It makes use
-        of AOP to intercept the calls to your Controller or RestController endpoints and then builds a Specification
-        from the provided query parameters
-    </description>
-    <url>https://github.com/magrifle/search-api</url>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.magrifle</groupId>
     <artifactId>data-search-api</artifactId>
     <version>1.0.4</version>
     <packaging>jar</packaging>
+    <name>data-search-api</name>
+    <description>A library that helps you instantly turn your Spring powered endpoints into a query engine. It makes use
+        of AOP to intercept the calls to your Controller or RestController endpoints and then builds a Specification
+        from the provided query parameters</description>
+    <url>https://github.com/magrifle/search-api</url>
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -90,14 +89,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>hamcrest-core</artifactId>
                     <groupId>org.hamcrest</groupId>
                 </exclusion>
             </exclusions>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
