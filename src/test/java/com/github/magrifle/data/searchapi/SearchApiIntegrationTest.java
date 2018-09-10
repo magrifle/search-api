@@ -3,8 +3,6 @@ package com.github.magrifle.data.searchapi;
 import com.github.magrifle.data.searchapi.exception.SearchKeyValidationException;
 import com.github.magrifle.data.searchapi.test_app.AppConfig;
 import com.github.magrifle.data.searchapi.test_app.BeanConfig;
-import com.github.magrifle.data.searchapi.test_app.entity.TestEntity;
-import com.github.magrifle.data.searchapi.test_app.repository.TestEntityRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,13 +11,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Date;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -30,6 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class, BeanConfig.class})
 @WebAppConfiguration
+@SqlGroup({
+        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data/beforeTestRun.sql"),
+        @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:data/afterTestRun.sql")
+})
 public class SearchApiIntegrationTest {
 
     @Rule
@@ -38,9 +40,6 @@ public class SearchApiIntegrationTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
-    private TestEntityRepository testEntityRepository;
-
     private MockMvc mvc;
 
     @Before
@@ -48,10 +47,6 @@ public class SearchApiIntegrationTest {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
-        testEntityRepository.save(new TestEntity("John Smith", 12, new Date()));
-        testEntityRepository.save(new TestEntity("Paul Whales", 10, new Date()));
-        testEntityRepository.save(new TestEntity("Alice Conny", 12, new Date()));
-        testEntityRepository.save(new TestEntity("Paul Adams", 5, new Date()));
     }
 
     @Test
