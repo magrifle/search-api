@@ -17,7 +17,7 @@ curl http://your.awesome.api/search?q=firstName:Jones,lastName:Fran*,dateCreated
 
 ````xml
 <dependency>
-  <groupId>com.magrifle</groupId>
+  <groupId>com.github.magrifle</groupId>
   <artifactId>data-search-api</artifactId>
 </dependency>
 ````

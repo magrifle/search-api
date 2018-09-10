@@ -5,9 +5,6 @@ import com.magrifle.data.searchapi.aspect.DataSearchApi;
 import com.magrifle.data.searchapi.data.SearchKey;
 import com.magrifle.data.searchapi.test_app.entity.TestEntity;
 import com.magrifle.data.searchapi.test_app.repository.TestEntityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,23 +12,18 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Configuration
 @EnableWebMvc
 @EnableJpaRepositories(basePackageClasses = TestEntityRepository.class)
 @ComponentScan(basePackages = {"com.magrifle.data.searchapi"})
-public class BeanConfig implements ApplicationRunner {
+public class BeanConfig {
+
     @Bean
     public DataSearchApi searchApiAspect() {
         return new DataSearchApi();
     }
-
-
-    @Autowired
-    private TestEntityRepository testEntityRepository;
-
 
     @Bean
     public SearchConfigurer<TestEntity> getSearchKeysForItem() {
@@ -47,14 +39,4 @@ public class BeanConfig implements ApplicationRunner {
             }
         };
     }
-
-
-    @Override
-    public void run(ApplicationArguments applicationArguments) {
-        testEntityRepository.save(new TestEntity("John Smith", 12, new Date()));
-        testEntityRepository.save(new TestEntity("Paul Mc", 10, new Date()));
-        testEntityRepository.save(new TestEntity("Alice Kone", 12, new Date()));
-        testEntityRepository.save(new TestEntity("Wales Adam", 5, new Date()));
-    }
-
 }
