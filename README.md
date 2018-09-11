@@ -1,6 +1,6 @@
 # search-api
 [![Build Status](https://travis-ci.org/magrifle/search-api.svg?branch=master)](https://travis-ci.org/magrifle/search-api)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.magrifle/data-search-api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.magrifle/data-search-api/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.magrifle/data-search-api.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.magrifle%22%20AND%20a:%22data-search-api%22)
 
 A library that helps you instantly turn your Spring powered endpoints into a query engine.
 It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestController` endpoint and then builds a `Specification` from the provided query parameters
