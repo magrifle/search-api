@@ -21,6 +21,8 @@
         <developer>
             <name>Sodiq Fagbola</name>
             <organization>magrifle</organization>
+            <id>damilolasodiq</id>
+            <email>damilolasodiq@gmail.com</email>
             <organizationUrl>https://github.com/magrifle</organizationUrl>
         </developer>
     </developers>
@@ -65,25 +67,25 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.11.1.RELEASE</version>
+            <version>1.11.16.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.3.11.Final</version>
+            <version>5.3.7.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.11.Final</version>
+            <version>5.3.7.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -101,7 +103,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.10.0</version>
+            <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -113,13 +115,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
-            <version>1.5.13.RELEASE</version>
+            <version>2.0.6.RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.194</version>
+            <version>1.4.197</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -137,25 +139,25 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>4.3.7.RELEASE</version>
+            <version>5.1.1.RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>4.3.17.RELEASE</version>
+            <version>5.1.1.RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.5.2</version>
+            <version>2.9.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.5.2</version>
+            <version>2.9.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -167,7 +169,7 @@
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>2.2.0</version>
+            <version>2.4.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
