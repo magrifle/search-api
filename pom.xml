@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.magrifle</groupId>
     <artifactId>data-search-api</artifactId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.6</version>
     <packaging>jar</packaging>
     <name>data-search-api</name>
     <description>A library that helps you instantly turn your Spring powered endpoints into a query engine. It makes use
@@ -19,17 +19,17 @@
 
     <developers>
         <developer>
-            <name>Sodiq Fagbola</name>
-            <organization>magrifle</organization>
             <id>damilolasodiq</id>
+            <name>Sodiq Fagbola</name>
             <email>damilolasodiq@gmail.com</email>
+            <organization>magrifle</organization>
             <organizationUrl>https://github.com/magrifle</organizationUrl>
         </developer>
     </developers>
     <scm>
         <connection>scm:git:https://github.com/magrifle/search-api.git</connection>
         <developerConnection>scm:git:https://github.com/magrifle/search-api.git</developerConnection>
-        <tag>data-search-api-1.0.1</tag>
+        <tag>data-search-api-1.0.6</tag>
         <url>https://github.com/magrifle/search-api.git</url>
     </scm>
     <distributionManagement>
