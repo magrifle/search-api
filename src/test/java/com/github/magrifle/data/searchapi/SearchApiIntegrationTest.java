@@ -54,7 +54,7 @@ public class SearchApiIntegrationTest {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=id:1,age:12"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("John Smith")))
                 .andExpect(jsonPath("$[0].age", is(12)));
@@ -65,7 +65,7 @@ public class SearchApiIntegrationTest {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=age:12"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("John Smith")))
                 .andExpect(jsonPath("$[1].name", is("Alice Conny")))
@@ -78,7 +78,7 @@ public class SearchApiIntegrationTest {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=age<12"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Paul Whales")))
                 .andExpect(jsonPath("$[1].name", is("Paul Adams")))
@@ -91,7 +91,7 @@ public class SearchApiIntegrationTest {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=age>5"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].name", is("John Smith")))
                 .andExpect(jsonPath("$[1].name", is("Paul Whales")))
@@ -106,7 +106,7 @@ public class SearchApiIntegrationTest {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=fullName:*Paul*"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", is("Paul Whales")))
                 .andExpect(jsonPath("$[1].name", is("Paul Adams")));

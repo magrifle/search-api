@@ -4,10 +4,10 @@ import com.github.magrifle.data.searchapi.SearchKeyConfigurerService;
 import com.github.magrifle.data.searchapi.SearchOperation;
 import com.github.magrifle.data.searchapi.data.SearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SpecificationsBuilder<T> {
 
@@ -57,7 +57,7 @@ public class SpecificationsBuilder<T> {
 
         Specification<T> result = specs.get(0);
         for (int i = 1; i < specs.size(); i++) {
-            result = Specifications.where(result).and(specs.get(i));
+            result = Objects.requireNonNull(Specification.where(result)).and(specs.get(i));
         }
         return result;
     }
