@@ -8,6 +8,11 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 
 **Inspired by** [GitHub Search API](https://developer.github.com/v3/search/)
 
+| version | spring-data compatibility |
+|---|---|
+| 2.x > | 2.x >
+| <2.x  | < 2.x
+
 # Example
 ````curl
 curl http://your.awesome.api/search?q=firstName:Jones,lastName:Fran*,dateCreated>2018-01-01,age<67,city:*ondon*
