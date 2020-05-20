@@ -8,7 +8,8 @@
     <name>data-search-api</name>
     <description>A library that helps you instantly turn your Spring powered endpoints into a query engine. It makes use
         of AOP to intercept the calls to your Controller or RestController endpoints and then builds a Specification
-        from the provided query parameters</description>
+        from the provided query parameters
+    </description>
     <url>https://github.com/magrifle/search-api</url>
     <licenses>
         <license>
