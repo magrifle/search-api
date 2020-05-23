@@ -16,7 +16,7 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 # What's new - 2.0.2?
 Support for child entity `@OneToOne`, `@OneToMany`, `@ManyToMany` (up to one level deep :( )
 
-[Change log] (./CHANGELOG.md)
+[Change log](./CHANGELOG.md)
 
 # Example
 ````curl
