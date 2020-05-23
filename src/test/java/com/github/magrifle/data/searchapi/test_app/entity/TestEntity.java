@@ -1,8 +1,14 @@
 package com.github.magrifle.data.searchapi.test_app.entity;
 
+import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+@Data
 @Entity
 @Table(name = "test_entity")
 public class TestEntity {
@@ -17,54 +23,13 @@ public class TestEntity {
 
     private Date dateCreated;
 
+    @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_child_entity"))
+    private ChildEntity childEntity;
 
-    public TestEntity() {
-
-    }
-
-    public TestEntity(String name, int age, Date dateCreated) {
-        this.name = name;
-        this.age = age;
-        this.dateCreated = dateCreated;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public int getAge() {
-        return age;
-    }
-
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(foreignKey = @ForeignKey(name = "fk_test_entity")),
+            inverseJoinColumns = @JoinColumn(foreignKey = @ForeignKey(name = "fk_many_entities")))
+    private List<ManyEntity> manyEntities;
 }

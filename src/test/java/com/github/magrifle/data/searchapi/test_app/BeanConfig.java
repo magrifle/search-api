@@ -30,11 +30,13 @@ public class BeanConfig {
         return new SearchConfigurer<TestEntity>() {
             @Override
             public List<SearchKey> getSearchKeys() {
-                List<SearchKey> searchKeys = new ArrayList();
+                List<SearchKey> searchKeys = new ArrayList<>();
                 searchKeys.add(new SearchKey("age"));
                 searchKeys.add(new SearchKey("id"));
                 searchKeys.add(new SearchKey("fullName", "name"));
                 searchKeys.add(new SearchKey("enrolledDate", "dateCreated"));
+                searchKeys.add(new SearchKey("childName", "childEntity.name"));
+                searchKeys.add(new SearchKey("manyName", "manyEntities.name"));
                 return searchKeys;
             }
         };

@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class SearchKeyConfigurerService<T> {
@@ -73,10 +74,10 @@ public final class SearchKeyConfigurerService<T> {
 
 
     private boolean isDateField(String fieldName) {
-
         return Arrays.stream(this.searchConfigurer.getType().getDeclaredFields())
                 .peek(f -> f.setAccessible(true))
                 .filter(f -> f.getName().equalsIgnoreCase(fieldName))
                 .anyMatch(f -> f.getType().isAssignableFrom(Date.class));
     }
+
 }

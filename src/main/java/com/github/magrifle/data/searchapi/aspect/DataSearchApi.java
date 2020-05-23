@@ -5,6 +5,7 @@ import com.github.magrifle.data.searchapi.SearchKeyConfigurerService;
 import com.github.magrifle.data.searchapi.SearchOperation;
 import com.github.magrifle.data.searchapi.annotation.SearchApi;
 import com.github.magrifle.data.searchapi.data.SearchBuilder;
+import com.github.magrifle.data.searchapi.data.SearchKey;
 import com.github.magrifle.data.searchapi.exception.SearchApiConfigurationException;
 import com.github.magrifle.data.searchapi.exception.SearchKeyValidationException;
 import com.github.magrifle.data.searchapi.specification.EntitySpecification;
@@ -31,9 +32,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Aspect
-public class DataSearchApi {
+public final class DataSearchApi {
     private static final Logger logger = LoggerFactory.getLogger(DataSearchApi.class);
 
     @Autowired
@@ -41,6 +43,9 @@ public class DataSearchApi {
 
     @Autowired
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    private static final Pattern SEARCH_FIELD_PATTERN = java.util.regex.Pattern.compile("^[a-zA-Z0-9-_]*$");
+
 
     //could expose this config if startup is significantly slow
     private boolean checkConfigurationsOnStartup = true;
@@ -53,12 +58,12 @@ public class DataSearchApi {
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *) ||" +
             "within(@org.springframework.stereotype.Controller *)")
-    public void allPublicControllerMethodsPointcut() {
+    private void allPublicControllerMethodsPointcut() {
     }
 
 
     @Around("allPublicControllerMethodsPointcut() && methodsWithSearchApi(searchApi)")
-    public Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable {
+    private Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String queryParameter = request.getParameter(searchApi.queryString());
         if ((queryParameter == null || queryParameter.isEmpty()) && searchApi.failOnMissingQueryString()) {
@@ -94,11 +99,11 @@ public class DataSearchApi {
 
 
     @PostConstruct
-    public void init() {
+    private void init() {
         if (this.checkConfigurationsOnStartup) {
             this.checkBeanConfigurations();
+            this.validateSearchFields();
         }
-
     }
 
 
@@ -120,5 +125,14 @@ public class DataSearchApi {
         }
     }
 
-
+    private void validateSearchFields() {
+        searchConfigurers.stream()
+                .flatMap(i -> (Stream<SearchKey>) i.getSearchKeys().stream())
+                .map(SearchKey::getName)
+                .filter(i -> !SEARCH_FIELD_PATTERN.matcher(i).matches())
+                .findAny()
+                .ifPresent(i -> {
+                    throw new IllegalArgumentException("Invalid field name [" + i + "] defined. Valid pattern " + SEARCH_FIELD_PATTERN.pattern());
+                });
+    }
 }

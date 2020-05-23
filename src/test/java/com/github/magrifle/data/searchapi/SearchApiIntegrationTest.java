@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -23,14 +24,22 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class, BeanConfig.class})
 @WebAppConfiguration
 @SqlGroup({
-        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data/beforeTestRun.sql"),
-        @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:data/afterTestRun.sql")
+        @Sql(
+                executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+                scripts = "classpath:data/beforeTestRun.sql",
+                config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR)),
+        @Sql(
+                executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD,
+                scripts = "classpath:data/afterTestRun.sql",
+                config = @SqlConfig(errorMode = SqlConfig.ErrorMode.CONTINUE_ON_ERROR)
+        )
 })
 public class SearchApiIntegrationTest {
 
@@ -52,12 +61,17 @@ public class SearchApiIntegrationTest {
     @Test
     public void searchApi_whenValidQueryProvidedMatchingSingleItem_thenReturnData() throws Exception {
         // GIVEN / THEN / WHEN
-        mvc.perform(get("/search?q=id:1,age:12"))
+        mvc.perform(get("/search?q=id:1,age:12,childName:Tobi,manyName:*gr*"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("John Smith")))
-                .andExpect(jsonPath("$[0].age", is(12)));
+                .andExpect(jsonPath("$[0].age", is(12)))
+                .andExpect(jsonPath("$[0].childEntity.name", is("Tobi")))
+                .andExpect(jsonPath("$[0].manyEntities", hasSize(2)))
+                .andExpect(jsonPath("$[0].manyEntities[0].name", is("Margret")))
+                .andExpect(jsonPath("$[0].manyEntities[1].name", is("Ingrid")));
     }
 
     @Test
@@ -67,10 +81,17 @@ public class SearchApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("John Smith")))
-                .andExpect(jsonPath("$[1].name", is("Alice Conny")))
-                .andExpect(jsonPath("$[0].age", is(12)))
-                .andExpect(jsonPath("$[1].age", is(12)));
+                .andExpect(jsonPath("$[?(@.age==12)]", hasSize(2)));
+    }
+
+    @Test
+    public void searchApi_whenSearchItemIsNotEqual_thenReturnData() throws Exception {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=age!12"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[?(@.age == 12)]").doesNotExist());
     }
 
     @Test
@@ -80,10 +101,7 @@ public class SearchApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Paul Whales")))
-                .andExpect(jsonPath("$[1].name", is("Paul Adams")))
-                .andExpect(jsonPath("$[0].age", is(10)))
-                .andExpect(jsonPath("$[1].age", is(5)));
+                .andExpect(jsonPath("$[?(@.age < 12)]", hasSize(2)));
     }
 
     @Test
@@ -93,12 +111,7 @@ public class SearchApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].name", is("John Smith")))
-                .andExpect(jsonPath("$[1].name", is("Paul Whales")))
-                .andExpect(jsonPath("$[2].name", is("Alice Conny")))
-                .andExpect(jsonPath("$[0].age", is(12)))
-                .andExpect(jsonPath("$[1].age", is(10)))
-                .andExpect(jsonPath("$[2].age", is(12)));
+                .andExpect(jsonPath("$[?(@.age > 5)]", hasSize(3)));
     }
 
     @Test
@@ -108,8 +121,8 @@ public class SearchApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("Paul Whales")))
-                .andExpect(jsonPath("$[1].name", is("Paul Adams")));
+                .andExpect(jsonPath("$[?(@.name == 'Paul Whales')]").exists())
+                .andExpect(jsonPath("$[?(@.name == 'Paul Adams')]").exists());
     }
 
     @Test

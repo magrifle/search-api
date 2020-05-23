@@ -13,6 +13,11 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 | 2.x > | 2.x >
 | <2.x  | < 2.x
 
+# What's new - 2.0.2?
+Support for child entity `@OneToOne`, `@OneToMany`, `@ManyToMany` (up to one level deep :( )
+
+[Change log] (./CHANGELOG.md)
+
 # Example
 ````curl
 curl http://your.awesome.api/search?q=firstName:Jones,lastName:Fran*,dateCreated>2018-01-01,age<67,city:*ondon*
