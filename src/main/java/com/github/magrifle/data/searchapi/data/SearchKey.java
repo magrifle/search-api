@@ -46,7 +46,7 @@ public class SearchKey
 
     public SearchKey(String name, Function<String, Object> customization)
     {
-        this.name = name;
+        this(name);
         this.customization = customization;
     }
 
