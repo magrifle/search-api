@@ -136,4 +136,48 @@ public class SearchApiIntegrationTest {
         assertTrue(resolvedException instanceof SearchKeyValidationException);
     }
 
+    @Test
+    public void searchApi_withEnumField_thenReturnData() throws Exception {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=role:USER"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is("John Smith")))
+            .andExpect(jsonPath("$[0].age", is(12)))
+            .andExpect(jsonPath("$[0].childEntity.name", is("Tobi")))
+            .andExpect(jsonPath("$[0].manyEntities", hasSize(2)))
+            .andExpect(jsonPath("$[0].manyEntities[0].name", is("Margret")))
+            .andExpect(jsonPath("$[0].manyEntities[1].name", is("Ingrid")));
+    }
+
+    @Test
+    public void searchApi_withBooleanFieldSetToTrue_thenReturnData() throws Exception {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=human:true"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is("John Smith")))
+            .andExpect(jsonPath("$[0].age", is(12)))
+            .andExpect(jsonPath("$[0].childEntity.name", is("Tobi")))
+            .andExpect(jsonPath("$[0].manyEntities", hasSize(2)))
+            .andExpect(jsonPath("$[0].manyEntities[0].name", is("Margret")))
+            .andExpect(jsonPath("$[0].manyEntities[1].name", is("Ingrid")));
+    }
+
+    @Test
+    public void searchApi_withBooleanFieldSetToFalse_thenReturnData() throws Exception {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=human:false"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is("Paul Whales")))
+            .andExpect(jsonPath("$[0].age", is(10)));
+    }
+
 }
