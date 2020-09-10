@@ -4,12 +4,10 @@ import com.github.magrifle.data.searchapi.data.SearchCriteria;
 import com.github.magrifle.data.searchapi.data.SearchKey;
 import com.github.magrifle.data.searchapi.exception.SearchDataFormatException;
 import com.github.magrifle.data.searchapi.exception.SearchKeyValidationException;
-
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class SearchKeyConfigurerService<T> {
@@ -32,20 +30,28 @@ public final class SearchKeyConfigurerService<T> {
     private void transform(SearchCriteria criterion) throws SearchKeyValidationException, SearchDataFormatException {
         if (criterion != null) {
             SearchKey searchKey = this.searchConfigurer.getSearchKeys()
-                    .stream()
-                    .filter(n -> n.getName().equalsIgnoreCase(criterion.getKey()))
-                    .findAny()
-                    .orElseThrow(() -> new SearchKeyValidationException(
-                            "Unknown search key \"" + criterion.getKey() + "\" was found!"));
+                .stream()
+                .filter(n -> n.getName().equalsIgnoreCase(criterion.getKey()))
+                .findAny()
+                .orElseThrow(() -> new SearchKeyValidationException(
+                    "Unknown search key \"" + criterion.getKey() + "\" was found!"));
 
             this.validateKey(searchKey, criterion);
-            if (this.isDateField(searchKey.getFieldName())) {
-                try {
+            if (this.isDateField(searchKey.getFieldName()))
+            {
+                try
+                {
                     criterion.setValue(this.searchConfigurer.getDateKeyFormat().parse(criterion.getValue().toString()));
-                } catch (ParseException e) {
-                    throw new SearchDataFormatException("Unparseable date value \"" + criterion.getValue()
-                            .toString() + "\". The expected format is \"" + this.searchConfigurer.getDateKeyFormat().toLocalizedPattern() + "\"");
                 }
+                catch (ParseException e)
+                {
+                    throw new SearchDataFormatException("Unparseable date value \"" + criterion.getValue()
+                        .toString() + "\". The expected format is \"" + this.searchConfigurer.getDateKeyFormat().toLocalizedPattern() + "\"");
+                }
+            }
+            if (searchKey.getCustomization() != null)
+            {
+                criterion.setValue(searchKey.getCustomization().apply(criterion.getValue().toString()));
             }
             criterion.setKey(searchKey.getFieldName());
         }
