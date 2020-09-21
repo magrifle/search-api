@@ -2,10 +2,15 @@ package com.github.magrifle.data.searchapi.specification;
 
 import com.github.magrifle.data.searchapi.SearchOperation;
 import com.github.magrifle.data.searchapi.data.SearchCriteria;
-import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
+import java.util.Arrays;
 import java.util.Date;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import org.springframework.data.jpa.domain.Specification;
 
 public class EntitySpecification<T> implements Specification<T> {
 
@@ -55,6 +60,11 @@ public class EntitySpecification<T> implements Specification<T> {
                 return builder.like(path, "%" + criteria.getValue());
             case CONTAINS:
                 return builder.like(path, "%" + criteria.getValue() + "%");
+            case IN:
+                CriteriaBuilder.In inClause = builder.in(path);
+                Arrays.asList(criteria.getValue().toString().split("_"))
+                    .forEach(v -> inClause.value(path.getJavaType().isAssignableFrom(Long.class) ? Long.valueOf(v) : v));
+                return inClause;
             default:
                 return null;
         }

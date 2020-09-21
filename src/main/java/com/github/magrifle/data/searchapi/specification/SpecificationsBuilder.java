@@ -3,11 +3,10 @@ package com.github.magrifle.data.searchapi.specification;
 import com.github.magrifle.data.searchapi.SearchKeyConfigurerService;
 import com.github.magrifle.data.searchapi.SearchOperation;
 import com.github.magrifle.data.searchapi.data.SearchCriteria;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.jpa.domain.Specification;
 
 public class SpecificationsBuilder<T> {
 
@@ -31,10 +30,17 @@ public class SpecificationsBuilder<T> {
 
                 if (startWithAsterisk && endWithAsterisk) {
                     op = SearchOperation.CONTAINS;
-                } else if (startWithAsterisk) {
+                } else if (startWithAsterisk)
+                {
                     op = SearchOperation.ENDS_WITH;
-                } else if (endWithAsterisk) {
+                }
+                else if (endWithAsterisk)
+                {
                     op = SearchOperation.STARTS_WITH;
+                }
+                else if (prefix.equals("[") && suffix.equals("]"))
+                {
+                    op = SearchOperation.IN;
                 }
             }
             SearchCriteria searchCriteria = new SearchCriteria(key, op, value);

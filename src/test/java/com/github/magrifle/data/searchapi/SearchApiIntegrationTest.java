@@ -20,12 +20,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class, BeanConfig.class})
@@ -169,7 +172,8 @@ public class SearchApiIntegrationTest {
     }
 
     @Test
-    public void searchApi_withBooleanFieldSetToFalse_thenReturnData() throws Exception {
+    public void searchApi_withBooleanFieldSetToFalse_thenReturnData() throws Exception
+    {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=human:false"))
             .andDo(print())
@@ -178,6 +182,31 @@ public class SearchApiIntegrationTest {
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].name", is("Paul Whales")))
             .andExpect(jsonPath("$[0].age", is(10)));
+    }
+
+
+    @Test
+    public void searchApi_withValuesInFound_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=age>8,id:[1_2]"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[*].name", containsInAnyOrder("John Smith", "Paul Whales")))
+            .andExpect(jsonPath("$[*].age", containsInAnyOrder(10, 12)));
+    }
+
+    @Test
+    public void searchApi_withValuesInNotFound_thenReturnEmpty() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=id:[10]"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$").isEmpty());
     }
 
 }

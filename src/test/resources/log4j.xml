@@ -8,6 +8,11 @@
         </layout>
     </appender>
 
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor">
+        <level value="ALL" />
+        <appender-ref ref="console"/>
+    </logger>
+
     <root>
         <level value="INFO"/>
         <appender-ref ref="console"/>
