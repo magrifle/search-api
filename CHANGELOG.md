@@ -1,3 +1,6 @@
+### 2.0.4
+Allow query for collections like `q=id:[1_2_30]` // filter where `id` in `1,2,30`
+
 ### 2.0.3
 Support for boolean and enum search with the help of the customization functions
 

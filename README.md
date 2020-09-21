@@ -13,8 +13,8 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 | 2.x > | 2.x >
 | <2.x  | < 2.x
 
-# What's new - 2.0.3?
-Support for boolean and enum search with the help of the customization functions
+# What's new - 2.0.4?
+Allow query for collections like `q=id:[1_2_30]` // filter where `id` in `1,2,30`
 
 [Change log](./CHANGELOG.md)
 
