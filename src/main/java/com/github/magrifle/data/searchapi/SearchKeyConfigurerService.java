@@ -54,6 +54,7 @@ public final class SearchKeyConfigurerService<T> {
                 criterion.setValue(searchKey.getCustomization().apply(criterion.getValue().toString()));
             }
             criterion.setKey(searchKey.getFieldName());
+            criterion.setType(searchKey.getType());
         }
 
     }

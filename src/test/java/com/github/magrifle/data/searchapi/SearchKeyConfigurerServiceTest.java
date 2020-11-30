@@ -2,9 +2,12 @@ package com.github.magrifle.data.searchapi;
 
 import com.github.magrifle.data.searchapi.data.SearchCriteria;
 import com.github.magrifle.data.searchapi.data.SearchKey;
-import com.github.magrifle.data.searchapi.test_app.entity.TestEntity;
 import com.github.magrifle.data.searchapi.exception.SearchDataFormatException;
 import com.github.magrifle.data.searchapi.exception.SearchKeyValidationException;
+import com.github.magrifle.data.searchapi.test_app.entity.TestEntity;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
