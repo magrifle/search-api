@@ -11,7 +11,7 @@ public abstract class SearchConfigurer<T> {
 
     public abstract List<SearchKey> getSearchKeys();
 
-
+    @Deprecated //you can use the SearchKey.customization instead
     protected SimpleDateFormat getDateKeyFormat() {
         return new SimpleDateFormat(DEFAULT_DATE_FORMAT);
     }

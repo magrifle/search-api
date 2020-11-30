@@ -13,10 +13,40 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 | 2.x > | 2.x >
 | <2.x  | < 2.x
 
-# What's new - 2.0.4?
-Allow query for collections like `q=id:[1_2_30]` // filter where `id` in `1,2,30`
+# What's new - 2.0.5?
+Allow support for `@Discriminators` when fetching entities
 
-[Change log](./CHANGELOG.md)
+```java
+
+@Entity
+@DiscriminatorValue("CAR")
+public class CarEntity extends VehicleEntity
+{
+    private Integer numberOfDoors;
+}
+
+
+@Entity(name = "vehicle_entity")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "vehicle_type", discriminatorType = DiscriminatorType.STRING)
+public class VehicleEntity
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private Integer numberOfWheels;
+
+}
+
+//bean config
+...
+SearchKey numberOfDoors = new SearchKey("numberOfDoors", "vehicleEntity.numberOfDoors");
+numberOfDoors.setType(CarEntity.class);
+searchKeys.add(numberOfDoors);
+``` 
+
+[Full Change log](./CHANGELOG.md)
 
 # Example
 ````curl
