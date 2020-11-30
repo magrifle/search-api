@@ -3,6 +3,7 @@ package com.github.magrifle.data.searchapi.test_app;
 import com.github.magrifle.data.searchapi.SearchConfigurer;
 import com.github.magrifle.data.searchapi.aspect.DataSearchApi;
 import com.github.magrifle.data.searchapi.data.SearchKey;
+import com.github.magrifle.data.searchapi.test_app.entity.CarEntity;
 import com.github.magrifle.data.searchapi.test_app.entity.Role;
 import com.github.magrifle.data.searchapi.test_app.entity.TestEntity;
 import com.github.magrifle.data.searchapi.test_app.repository.TestEntityRepository;
@@ -40,6 +41,10 @@ public class BeanConfig {
                 searchKeys.add(new SearchKey("manyName", "manyEntities.name"));
                 searchKeys.add(new SearchKey("role", Role::valueOf));
                 searchKeys.add(new SearchKey("human", Boolean::new));
+                searchKeys.add(new SearchKey("numberOfWheels", "vehicleEntity.numberOfWheels"));
+                SearchKey numberOfDoors = new SearchKey("numberOfDoors", "vehicleEntity.numberOfDoors");
+                numberOfDoors.setType(CarEntity.class);
+                searchKeys.add(numberOfDoors);
                 return searchKeys;
             }
         };

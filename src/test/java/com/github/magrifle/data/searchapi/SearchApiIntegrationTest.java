@@ -186,7 +186,7 @@ public class SearchApiIntegrationTest {
 
 
     @Test
-    public void searchApi_withValuesInFound_thenReturnData() throws Exception
+    public void searchApi_withValuesIsFound_thenReturnData() throws Exception
     {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=age>8,id:[1_2]"))
@@ -199,7 +199,7 @@ public class SearchApiIntegrationTest {
     }
 
     @Test
-    public void searchApi_withValuesInNotFound_thenReturnEmpty() throws Exception
+    public void searchApi_withValuesIsNotFound_thenReturnEmpty() throws Exception
     {
         // GIVEN / THEN / WHEN
         mvc.perform(get("/search?q=id:[10]"))
@@ -209,4 +209,39 @@ public class SearchApiIntegrationTest {
             .andExpect(jsonPath("$").isEmpty());
     }
 
+    @Test
+    public void searchApi_withDiscriminatorParentFieldValuesFound_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=numberOfWheels:4"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is("John Smith")));
+    }
+
+    @Test
+    public void searchApi_withDiscriminatorChildFieldValuesFound_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=numberOfDoors:4"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is("John Smith")));
+    }
+
+    @Test
+    public void searchApi_withDiscriminatorChildFieldAndParentValuesFound_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=numberOfDoors:4,age:12"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", is("John Smith")));
+    }
 }

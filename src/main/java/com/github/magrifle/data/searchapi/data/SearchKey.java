@@ -15,6 +15,8 @@ public class SearchKey
 
     private Function<String, Object> customization;
 
+    private Class<?> type;
+
 
     public SearchKey(String name, String fieldName, boolean required)
     {
@@ -115,5 +117,17 @@ public class SearchKey
     public void setCustomization(Function<String, Object> customization)
     {
         this.customization = customization;
+    }
+
+
+    public Class<?> getType()
+    {
+        return type;
+    }
+
+
+    public void setType(Class<?> type)
+    {
+        this.type = type;
     }
 }

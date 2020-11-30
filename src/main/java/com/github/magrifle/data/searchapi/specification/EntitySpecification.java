@@ -26,24 +26,34 @@ public class EntitySpecification<T> implements Specification<T> {
 
     @Override
     public Predicate toPredicate(
-            Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        if (criteria == null) {
+        Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder)
+    {
+        if (criteria == null)
+        {
             return null;
         }
 
         Path path;
         String[] joins = criteria.getKey().split("\\.");
-        if (joins.length > 1) {
+        if (joins.length > 1)
+        {
             Join join = root.join(joins[0]);
-            path = join.get(joins[1]);
-
-        } else {
+            path = criteria.getType() != null ? builder.treat(join, criteria.getType()).get(joins[1]) : join.get(joins[1]);
+        }
+        else
+        {
             path = root.get(criteria.getKey());
             query.distinct(true);
         }
 
+        return getCriteria(builder, path);
+    }
 
-        switch (criteria.getOperation()) {
+
+    private Predicate getCriteria(CriteriaBuilder builder, Path path)
+    {
+        switch (criteria.getOperation())
+        {
             case EQUALITY:
             case NEGATION:
                 Predicate predicate = builder.equal(path, criteria.getValue());

@@ -49,4 +49,8 @@ public class TestEntity
     @JoinTable(joinColumns = @JoinColumn(foreignKey = @ForeignKey(name = "fk_test_entity")),
             inverseJoinColumns = @JoinColumn(foreignKey = @ForeignKey(name = "fk_many_entities")))
     private List<ManyEntity> manyEntities;
+
+    @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_vehicle_entity"))
+    private VehicleEntity vehicleEntity;
 }
