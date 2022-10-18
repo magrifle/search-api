@@ -16,4 +16,8 @@ public class ChildEntity {
 
     private String name;
 
+    private String gender;
+
+    private String occupation;
+
 }

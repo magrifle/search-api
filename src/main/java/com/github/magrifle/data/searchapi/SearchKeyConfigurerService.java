@@ -55,6 +55,7 @@ public final class SearchKeyConfigurerService<T> {
             }
             criterion.setKey(searchKey.getFieldName());
             criterion.setType(searchKey.getType());
+            criterion.setCaseSensitive(searchKey.isCaseSensitive());
         }
 
     }
