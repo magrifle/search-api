@@ -17,8 +17,6 @@ public class SearchKey
 
     private Class<?> type;
 
-    private boolean caseSensitive = true;
-
 
     public SearchKey(String name, String fieldName, boolean required)
     {
@@ -26,12 +24,6 @@ public class SearchKey
         this.required = required;
     }
 
-    public SearchKey(String name, String fieldName, boolean required, boolean caseSensitive)
-    {
-        this(name, fieldName);
-        this.required = required;
-        this.caseSensitive = caseSensitive;
-    }
 
     public SearchKey(String name, String fieldName, boolean required, Function<String, Object> customization)
     {
@@ -65,13 +57,6 @@ public class SearchKey
     {
         this.name = fieldName;
         this.fieldName = fieldName;
-    }
-
-    public SearchKey(String fieldName, boolean caseSensitive)
-    {
-        this.name = fieldName;
-        this.fieldName = fieldName;
-        this.caseSensitive = caseSensitive;
     }
 
 
@@ -144,15 +129,5 @@ public class SearchKey
     public void setType(Class<?> type)
     {
         this.type = type;
-    }
-
-
-    public boolean isCaseSensitive() {
-        return caseSensitive;
-    }
-
-
-    public void setCaseSensitive(boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
     }
 }

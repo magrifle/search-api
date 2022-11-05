@@ -36,12 +36,12 @@ public class BeanConfig {
                 searchKeys.add(new SearchKey("age"));
                 searchKeys.add(new SearchKey("id"));
                 searchKeys.add(new SearchKey("fullName", "name"));
-                searchKeys.add(new SearchKey("nationality", false));
+                searchKeys.add(new SearchKey("nationality", "nationality"));
                 searchKeys.add(new SearchKey("enrolledDate", "dateCreated"));
                 searchKeys.add(new SearchKey("childName", "childEntity.name"));
                 searchKeys.add(new SearchKey("manyName", "manyEntities.name"));
-                searchKeys.add(new SearchKey("childGender", "childEntity.gender", false, false));
-                searchKeys.add(new SearchKey("childOccupation", "childEntity.occupation", false, false));
+                searchKeys.add(new SearchKey("childGender", "childEntity.gender"));
+                searchKeys.add(new SearchKey("childOccupation", "childEntity.occupation"));
                 searchKeys.add(new SearchKey("role", Role::valueOf));
                 searchKeys.add(new SearchKey("human", Boolean::new));
                 searchKeys.add(new SearchKey("numberOfWheels", "vehicleEntity.numberOfWheels"));

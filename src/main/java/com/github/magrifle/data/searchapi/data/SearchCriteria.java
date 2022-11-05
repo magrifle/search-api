@@ -7,7 +7,7 @@ public class SearchCriteria {
     private SearchOperation operation;
     private Object value;
     private Class<?> type;
-    private boolean caseSensitive;
+    private boolean caseSensitive = true;
 
 
     public SearchCriteria(String key, SearchOperation operation, Object value) {

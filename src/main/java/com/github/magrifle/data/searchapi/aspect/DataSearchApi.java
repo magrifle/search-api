@@ -88,7 +88,8 @@ public final class DataSearchApi {
                     matcher.group(2),
                     matcher.group(4),
                     matcher.group(3),
-                    matcher.group(5)
+                    matcher.group(5),
+                    searchApi.caseSensitive()
             );
         }
         Specification build = builder.build();

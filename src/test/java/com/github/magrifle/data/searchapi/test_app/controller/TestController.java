@@ -17,7 +17,7 @@ public class TestController {
     private TestEntityRepository testEntityRepository;
 
 
-    @SearchApi(entity = TestEntity.class)
+    @SearchApi(entity = TestEntity.class, caseSensitive = false)
     @GetMapping("/search")
     public List<TestEntity> searchItems(SearchBuilder<TestEntity> builder) {
         return testEntityRepository.findAll(builder.build());

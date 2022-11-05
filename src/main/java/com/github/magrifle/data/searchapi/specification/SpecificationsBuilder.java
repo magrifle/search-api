@@ -20,7 +20,7 @@ public class SpecificationsBuilder<T> {
 
 
     public SpecificationsBuilder with(
-            String key, String operation, Object value, String prefix, String suffix) {
+            String key, String operation, Object value, String prefix, String suffix, boolean caseSensitive) {
 
         SearchOperation op = SearchOperation.SIMPLE_OPERATION_SET.get(operation.charAt(0));
         if (op != null) {
@@ -44,6 +44,7 @@ public class SpecificationsBuilder<T> {
                 }
             }
             SearchCriteria searchCriteria = new SearchCriteria(key, op, value);
+            searchCriteria.setCaseSensitive(caseSensitive);
             params.add(searchCriteria);
 
         }
