@@ -81,15 +81,14 @@ public final class DataSearchApi {
                 .orElseThrow(() -> new SearchApiConfigurationException("Could not find a configuration bean of " + SearchConfigurer.class.getName() + "<\"" + searchApi.entity() + "\">"));
 
         //rework to use a single instance of all classes except the configurer
-        SpecificationsBuilder builder = new SpecificationsBuilder(new SearchKeyConfigurerService(first));
+        SpecificationsBuilder builder = new SpecificationsBuilder(new SearchKeyConfigurerService(first), searchApi.caseSensitive());
         while (matcher.find()) {
             builder.with(
                     matcher.group(1),
                     matcher.group(2),
                     matcher.group(4),
                     matcher.group(3),
-                    matcher.group(5),
-                    searchApi.caseSensitive()
+                    matcher.group(5)
             );
         }
         Specification build = builder.build();

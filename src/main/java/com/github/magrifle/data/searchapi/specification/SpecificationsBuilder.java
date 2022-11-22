@@ -11,16 +11,18 @@ import org.springframework.data.jpa.domain.Specification;
 public class SpecificationsBuilder<T> {
 
     private final SearchKeyConfigurerService<T> searchKeyConfigurerService;
+    private final boolean caseSensitive;
     private List<SearchCriteria> params = new ArrayList<>();
 
 
-    public SpecificationsBuilder(SearchKeyConfigurerService<T> searchKeyConfigurerService) {
+    public SpecificationsBuilder(SearchKeyConfigurerService<T> searchKeyConfigurerService, boolean caseSensitive) {
         this.searchKeyConfigurerService = searchKeyConfigurerService;
+        this.caseSensitive = caseSensitive;
     }
 
 
     public SpecificationsBuilder with(
-            String key, String operation, Object value, String prefix, String suffix, boolean caseSensitive) {
+            String key, String operation, Object value, String prefix, String suffix) {
 
         SearchOperation op = SearchOperation.SIMPLE_OPERATION_SET.get(operation.charAt(0));
         if (op != null) {
