@@ -7,6 +7,7 @@ public class SearchCriteria {
     private SearchOperation operation;
     private Object value;
     private Class<?> type;
+    private boolean caseSensitive = true;
 
 
     public SearchCriteria(String key, SearchOperation operation, Object value) {
@@ -57,5 +58,15 @@ public class SearchCriteria {
     public void setType(Class<?> type)
     {
         this.type = type;
+    }
+
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+
+    public void setCaseSensitive(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
     }
 }
