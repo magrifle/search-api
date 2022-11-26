@@ -14,7 +14,8 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 | <2.x  | < 2.x
 
 # What's new - 2.0.8?
-Allow support for `@Discriminators` when fetching entities
+- Allow case-insensitive entity search
+- Update vulnerable dependencies
 
 ```java
 
