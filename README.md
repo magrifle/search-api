@@ -13,7 +13,7 @@ It makes use of `AOP` to intercept the calls to your `@Controller` or `@RestCont
 | 2.x > | 2.x >
 | <2.x  | < 2.x
 
-# What's new - 2.0.5?
+# What's new - 2.0.8?
 Allow support for `@Discriminators` when fetching entities
 
 ```java
@@ -130,7 +130,8 @@ public class ApiController {
 
 | Name | Type | Description |
 |---|---|---|
-|`queryString`|`String`| `default` `"q"`. This is the query string parameter in the request that contains the search criteria. |
-|`keySeparator`|`char`| `default` `","`. The character used to separate different criteria in the `queryString` |
+|`queryString`|`String`| `default "q"`. This is the query string parameter in the request that contains the search criteria. |
+|`keySeparator`|`char`| `default ","`. The character used to separate different criteria in the `queryString` |
 |`entity`|`class`| `required`. The entity class to be queried.|
-|`failOnMissingQueryString`|`boolean`| `default` `"false"`. By default, if the `queryString` is empty, the endpoint would query the repository with an empty criteria which translates to `select * ...` in `sql`. You can turn off this behaviour by setting this parameter to `true` in which case a `SearchKeyValidationException` exception is thrown if the `queryString` is missing or does not contain any criteria. |
+|`failOnMissingQueryString`|`boolean`| `default false`. If the `queryString` is empty, the endpoint would query the repository with an empty criteria which translates to `select * ...` in `sql`. You can turn off this behaviour by setting this parameter to `true` in which case a `SearchKeyValidationException` exception is thrown if the `queryString` is missing or does not contain any criteria. |
+|`caseSensitive`|`boolean`| `default true`. Determines if the library should do a strict/case-sensitive search or not |
