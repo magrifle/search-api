@@ -1,6 +1,6 @@
 # search-api
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![Build Status](https://travis-ci.org/magrifle/search-api.svg?branch=master)](https://travis-ci.org/magrifle/search-api)
+[![Build Status](https://app.travis-ci.com/magrifle/search-api.svg?branch=master)](https://travis-ci.com/magrifle/search-api)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.magrifle/data-search-api.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.magrifle%22%20AND%20a:%22data-search-api%22)
 
 A library that helps you instantly turn your Spring powered endpoints into a query engine.
