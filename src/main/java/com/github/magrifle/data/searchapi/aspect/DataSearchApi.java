@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -65,13 +66,13 @@ public final class DataSearchApi {
     @Around("allPublicControllerMethodsPointcut() && methodsWithSearchApi(searchApi)")
     private Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String queryParameter = request.getParameter(searchApi.queryString());
+        String queryParameter = URLDecoder.decode(request.getParameter(searchApi.queryString()), "UTF-8");
         if ((queryParameter == null || queryParameter.isEmpty()) && searchApi.failOnMissingQueryString()) {
             throw new SearchKeyValidationException("The required query parameter \"" + searchApi.queryString() + "\" is missing");
         }
         logger.debug("Got query string {}", queryParameter);
         String join = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET.keySet());
-        Pattern pattern = Pattern.compile("(\\w+?)(" + join + ")(\\*|\\[?)([\\w-]+?)(\\*|]?),");
+        Pattern pattern = Pattern.compile("(\\w+?)(" + join + ")(\\*|\\[?)([\\w\\s-.@]+?)(\\*|]?),");
         Matcher matcher = pattern.matcher(queryParameter + searchApi.keySeparator().getValue());
         Object[] args = joinPoint.getArgs();
 

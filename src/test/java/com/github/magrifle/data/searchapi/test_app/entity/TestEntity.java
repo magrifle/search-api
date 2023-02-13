@@ -33,6 +33,8 @@ public class TestEntity
 
     private int age;
 
+    private String email;
+    
     private String nationality;
 
     @Enumerated(EnumType.STRING)
