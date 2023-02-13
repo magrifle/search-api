@@ -270,4 +270,41 @@ public class SearchApiIntegrationTest {
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].name", is("John Smith")));
     }
+
+    @Test
+    public void searchApi_whenSearchKeyCaseSensitivityIsFalse_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=nationality:nIGEriAn"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Paul Adams")));
+    }
+
+    @Test
+    public void searchApi_whenSearchKeyCaseSensitivityIsFalseAndOperationIsEndsWith_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=childGender:*aLE"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[*].name", containsInAnyOrder("John Smith", "Paul Whales")))
+                .andExpect(jsonPath("$[*].age", containsInAnyOrder(10, 12)));
+    }
+
+    @Test
+    public void searchApi_whenSearchKeyCaseSensitivityIsFalseAndOperationIsIn_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=childOccupation:[aCCoUntANT_bANKer]"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Paul Whales")));
+    }
 }

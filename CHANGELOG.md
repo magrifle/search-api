@@ -1,4 +1,7 @@
-### What's new - 2.0.5?
+### What's new - 2.0.8?
+Allow case-insensitive entity search
+
+### 2.0.5?
 Allow support for `@Discriminators` when fetching entities
 
 ```java
