@@ -35,6 +35,7 @@ public class BeanConfig {
                 List<SearchKey> searchKeys = new ArrayList<>();
                 searchKeys.add(new SearchKey("age"));
                 searchKeys.add(new SearchKey("id"));
+                searchKeys.add(new SearchKey("email"));
                 searchKeys.add(new SearchKey("fullName", "name"));
                 searchKeys.add(new SearchKey("enrolledDate", "dateCreated"));
                 searchKeys.add(new SearchKey("childName", "childEntity.name"));

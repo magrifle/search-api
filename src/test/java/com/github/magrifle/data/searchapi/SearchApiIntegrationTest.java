@@ -210,6 +210,32 @@ public class SearchApiIntegrationTest {
     }
 
     @Test
+    public void searchApi_whenSearchValueContainsSpaces_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=fullName:Alice%20Conny%20Victoria"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Alice Conny Victoria")))
+                .andExpect(jsonPath("$[0].age", is(12)));
+    }
+
+    @Test
+    public void searchApi_whenSearchValueContainsAtSymbolAndDot_thenReturnData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search?q=email:alice%2Econny%40email.com"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("Alice Conny Victoria")))
+                .andExpect(jsonPath("$[0].age", is(12)));
+    }
+
+    @Test
     public void searchApi_withDiscriminatorParentFieldValuesFound_thenReturnData() throws Exception
     {
         // GIVEN / THEN / WHEN
