@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -66,7 +67,8 @@ public final class DataSearchApi {
     @Around("allPublicControllerMethodsPointcut() && methodsWithSearchApi(searchApi)")
     private Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String queryParameter = URLDecoder.decode(request.getParameter(searchApi.queryString()), "UTF-8");
+        String queryParameter = request.getParameter(searchApi.queryString()) != null ?
+                URLDecoder.decode(request.getParameter(searchApi.queryString()), "UTF-8") : request.getParameter(searchApi.queryString());
         if ((queryParameter == null || queryParameter.isEmpty()) && searchApi.failOnMissingQueryString()) {
             throw new SearchKeyValidationException("The required query parameter \"" + searchApi.queryString() + "\" is missing");
         }

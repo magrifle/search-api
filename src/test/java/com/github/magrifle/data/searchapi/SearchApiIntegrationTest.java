@@ -223,6 +223,17 @@ public class SearchApiIntegrationTest {
     }
 
     @Test
+    public void searchApi_whenNoSearchParameter_thenReturnAllData() throws Exception
+    {
+        // GIVEN / THEN / WHEN
+        mvc.perform(get("/search"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(4)));
+    }
+
+    @Test
     public void searchApi_whenSearchValueContainsAtSymbolAndDot_thenReturnData() throws Exception
     {
         // GIVEN / THEN / WHEN
