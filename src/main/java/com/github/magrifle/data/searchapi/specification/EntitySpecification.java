@@ -56,28 +56,45 @@ public class EntitySpecification<T> implements Specification<T> {
         {
             case EQUALITY:
             case NEGATION:
-                Predicate predicate = builder.equal(path, criteria.getValue());
+                Predicate predicate = isCaseInsensitive(criteria, path) ? builder.equal(builder.lower(path), criteria.getValue().toString().toLowerCase()) :
+                        builder.equal(path, criteria.getValue());
                 return criteria.getOperation() == SearchOperation.NEGATION ? predicate.not() : predicate;
             case GREATER_THAN:
                 return path.getJavaType() == Date.class ? builder.greaterThan(path, ((Date) criteria.getValue())) : builder.greaterThan(path, criteria.getValue().toString());
             case LESS_THAN:
                 return path.getJavaType() == Date.class ? builder.lessThan(path, ((Date) criteria.getValue())) : builder.lessThan(path, criteria.getValue().toString());
             case LIKE:
-                return builder.like(path, criteria.getValue().toString());
+                return isCaseInsensitive(criteria, path) ? builder.like(builder.lower(path), criteria.getValue().toString().toLowerCase()) :
+                        builder.like(path, criteria.getValue().toString());
             case STARTS_WITH:
-                return builder.like(path, criteria.getValue() + "%");
+                return isCaseInsensitive(criteria, path) ? builder.like(builder.lower(path), criteria.getValue().toString().toLowerCase() + "%") :
+                        builder.like(path, criteria.getValue() + "%");
             case ENDS_WITH:
-                return builder.like(path, "%" + criteria.getValue());
+                return isCaseInsensitive(criteria, path) ? builder.like(builder.lower(path), "%" + criteria.getValue().toString().toLowerCase()) :
+                        builder.like(path, "%" + criteria.getValue());
             case CONTAINS:
-                return builder.like(path, "%" + criteria.getValue() + "%");
+                return isCaseInsensitive(criteria, path) ? builder.like(builder.lower(path), "%" + criteria.getValue().toString().toLowerCase() + "%") :
+                        builder.like(path, "%" + criteria.getValue() + "%");
             case IN:
-                CriteriaBuilder.In inClause = builder.in(path);
+                CriteriaBuilder.In inClause = isCaseInsensitive(criteria, path) ? builder.in(builder.lower(path)) : builder.in(path);
                 Arrays.asList(criteria.getValue().toString().split("_"))
-                    .forEach(v -> inClause.value(path.getJavaType().isAssignableFrom(Long.class) ? Long.valueOf(v) : v));
+                    .forEach(v -> {
+                        if (path.getJavaType().isAssignableFrom(Long.class)) {
+                            inClause.value(Long.valueOf(v));
+                        }else if(isCaseInsensitive(criteria, path)){
+                            inClause.value(v.toLowerCase());
+                        }else{
+                            inClause.value(v);
+                        }
+                    });
                 return inClause;
             default:
                 return null;
         }
+    }
+
+    private boolean isCaseInsensitive(SearchCriteria criteria, Path path){
+        return !criteria.isCaseSensitive() && path.getJavaType() == String.class;
     }
 
 }

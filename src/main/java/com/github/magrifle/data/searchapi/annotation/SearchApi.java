@@ -17,4 +17,6 @@ public @interface SearchApi {
 
     boolean failOnMissingQueryString() default false;
 
+    boolean caseSensitive() default true;
+
 }
