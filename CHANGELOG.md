@@ -1,4 +1,7 @@
-# What's new - 2.0.9?
+# What's new - 2.0.10?
+- Bug fixes
+
+### 2.0.9?
 - Support for space and @ in search value
 
 ### 2.0.8
