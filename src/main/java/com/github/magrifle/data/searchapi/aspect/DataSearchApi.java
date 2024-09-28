@@ -17,6 +17,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -40,17 +41,13 @@ import java.util.stream.Stream;
 public final class DataSearchApi {
     private static final Logger logger = LoggerFactory.getLogger(DataSearchApi.class);
 
-    private final List<SearchConfigurer<?>> searchConfigurers;
+    @Autowired
+    private List<SearchConfigurer<?>> searchConfigurers;
 
-    private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+    @Autowired
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     private static final Pattern SEARCH_FIELD_PATTERN = java.util.regex.Pattern.compile("^[a-zA-Z0-9-_]*$");
-
-
-    public DataSearchApi(List<SearchConfigurer<?>> searchConfigurers, RequestMappingHandlerMapping requestMappingHandlerMapping) {
-        this.searchConfigurers = searchConfigurers;
-        this.requestMappingHandlerMapping = requestMappingHandlerMapping;
-    }
 
 
     @Pointcut("@annotation(searchApi)")

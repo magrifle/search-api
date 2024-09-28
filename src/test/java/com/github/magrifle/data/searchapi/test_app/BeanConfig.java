@@ -23,8 +23,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 public class BeanConfig {
 
     @Bean
-    public DataSearchApi searchApiAspect(List<SearchConfigurer<?>> searchConfigurers, RequestMappingHandlerMapping requestMappingHandlerMapping) {
-        return new DataSearchApi(searchConfigurers,requestMappingHandlerMapping);
+    public DataSearchApi searchApiAspect() {
+        return new DataSearchApi();
     }
 
     @Bean
