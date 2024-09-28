@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @Configuration
 @EnableWebMvc
@@ -22,8 +23,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class BeanConfig {
 
     @Bean
-    public DataSearchApi searchApiAspect() {
-        return new DataSearchApi();
+    public DataSearchApi searchApiAspect(List<SearchConfigurer<?>> searchConfigurers, RequestMappingHandlerMapping requestMappingHandlerMapping) {
+        return new DataSearchApi(searchConfigurers,requestMappingHandlerMapping);
     }
 
     @Bean

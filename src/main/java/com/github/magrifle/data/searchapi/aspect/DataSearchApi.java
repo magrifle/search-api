@@ -17,8 +17,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.HandlerMethod;
@@ -36,20 +36,21 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Aspect
+@Component
 public final class DataSearchApi {
     private static final Logger logger = LoggerFactory.getLogger(DataSearchApi.class);
 
-    @Autowired
-    private List<SearchConfigurer> searchConfigurers;
+    private final List<SearchConfigurer<?>> searchConfigurers;
 
-    @Autowired
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     private static final Pattern SEARCH_FIELD_PATTERN = java.util.regex.Pattern.compile("^[a-zA-Z0-9-_]*$");
 
 
-    //could expose this config if startup is significantly slow
-    private boolean checkConfigurationsOnStartup = true;
+    public DataSearchApi(List<SearchConfigurer<?>> searchConfigurers, RequestMappingHandlerMapping requestMappingHandlerMapping) {
+        this.searchConfigurers = searchConfigurers;
+        this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+    }
 
 
     @Pointcut("@annotation(searchApi)")
@@ -63,7 +64,7 @@ public final class DataSearchApi {
     }
 
 
-    @Around("allPublicControllerMethodsPointcut() && methodsWithSearchApi(searchApi)")
+    @Around(value = "allPublicControllerMethodsPointcut() && methodsWithSearchApi(searchApi)", argNames = "joinPoint,searchApi")
     private Object buildSpecificationForMethod(ProceedingJoinPoint joinPoint, SearchApi searchApi) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String queryParameter = request.getParameter(searchApi.queryString()) != null ?
@@ -77,13 +78,13 @@ public final class DataSearchApi {
         Matcher matcher = pattern.matcher(queryParameter + searchApi.keySeparator().getValue());
         Object[] args = joinPoint.getArgs();
 
-        SearchConfigurer first = searchConfigurers.stream()
+        SearchConfigurer<?> first = searchConfigurers.stream()
                 .filter(b -> b.getType() == searchApi.entity())
                 .findFirst()
                 .orElseThrow(() -> new SearchApiConfigurationException("Could not find a configuration bean of " + SearchConfigurer.class.getName() + "<\"" + searchApi.entity() + "\">"));
 
         //rework to use a single instance of all classes except the configurer
-        SpecificationsBuilder builder = new SpecificationsBuilder(new SearchKeyConfigurerService(first), searchApi.caseSensitive());
+        SpecificationsBuilder<?> builder = new SpecificationsBuilder(new SearchKeyConfigurerService(first), searchApi.caseSensitive());
         while (matcher.find()) {
             builder.with(
                     matcher.group(1),
@@ -93,8 +94,8 @@ public final class DataSearchApi {
                     matcher.group(5)
             );
         }
-        Specification build = builder.build();
-        Specification specification = build == null ? new EntitySpecification<>() : build;
+        Specification<?> build = builder.build();
+        Specification<?> specification = build == null ? new EntitySpecification<>() : build;
         IntStream.range(0, args.length).filter(i -> args[i].getClass() == SearchBuilder.class).findFirst().ifPresent(i -> args[i] = new SearchBuilder<>(specification));
         return joinPoint.proceed(args);
     }
@@ -102,10 +103,9 @@ public final class DataSearchApi {
 
     @PostConstruct
     private void init() {
-        if (this.checkConfigurationsOnStartup) {
-            this.checkBeanConfigurations();
-            this.validateSearchFields();
-        }
+        //could wrap this in a conditional check if startup is too slow
+        this.checkBeanConfigurations();
+        this.validateSearchFields();
     }
 
 
@@ -116,7 +116,7 @@ public final class DataSearchApi {
         for (HandlerMethod handlerMethod : handlerMethods.values()) {
             SearchApi methodAnnotation = handlerMethod.getMethodAnnotation(SearchApi.class);
             if (methodAnnotation != null) {
-                Class type = methodAnnotation.entity();
+                Class<?> type = methodAnnotation.entity();
                 searchConfigurers.stream()
                         .filter(b -> b.getType() == type)
                         .findAny()
